@@ -11,7 +11,7 @@ class ThreePointStudio_CustomMarkupForUser_Helpers extends XenForo_Template_Help
 	}
 
 	public static function lazyArrayShift($array) {
-		array_shift($array);
+		unset($array[0]);
 		return $array;
 	}
 
@@ -84,6 +84,10 @@ class ThreePointStudio_CustomMarkupForUser_Helpers extends XenForo_Template_Help
 	public static function assembleCustomMarkup(array $user, $category) {
 		$options = unserialize($user["3ps_cmfu_options"]);
 		$finalTags = array();
+		$finalizedHTML = "{inner}";
+		if (!isset($options[$category])) { // No styling option set
+			return $finalizedHTML;
+		}
 		foreach ($options[$category] as $optionName => $optionValue) {
 			foreach (ThreePointStudio_CustomMarkupForUser_Constants::$availableMarkups[$optionName]["format"] as $tag => $tagArray) {
 				// Create the tag entry, if not set
@@ -128,7 +132,6 @@ class ThreePointStudio_CustomMarkupForUser_Helpers extends XenForo_Template_Help
 			}
 		}
 		// Compile the HTML
-		$finalizedHTML = "{inner}";
 		foreach ($finalTags as $tag => $tagArray) {
 			$attrCompiled = array();
 			foreach ($tagArray["attr"] as $attr => $attrValue) {

@@ -38,6 +38,8 @@ class ThreePointStudio_CustomMarkupForUser_Listener_Template {
 				), $baseViewParams));
 				$renderHTML .= $template->render();
 			}
+			// Clean up
+			$template->setParam("userOptions", null);
 			// Render user title
 			if ($visitor->hasPermission("3ps_cmfu", "canUseCustomUTM")) {
 				$template->setParams(array_merge(array(

@@ -16,7 +16,13 @@ class ThreePointStudio_CustomMarkupForUser_ControllerPublic_Account extends XFCP
 		);
 		// For I am lazy
 		$finalData = array();
-
+		if (empty($options)) {
+			// Nothing in here, populate it with nothingness
+			$options = array(
+				"username" => array(),
+				"usertitle" => array(),
+			);
+		}
 		// Pre-check cleanup
 		foreach ($options as $category => $catArray) {
 			foreach ($catArray as $itemName => $itemValue) {
