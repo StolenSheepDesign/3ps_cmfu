@@ -45,8 +45,7 @@ class ThreePointStudio_CustomMarkupForUser_Helpers extends XenForo_Template_Help
 	}
 
 	public static function helperRichUserName(array $user, $usernameHtml = '') {
-		//var_dump($user["3ps_cmfu_options"]);
-		$options = XenForo_Application::getOptions();
+		$stylingPref = intval(XenForo_Application::getOptions()->get("3ps_cmfu_usernameStylingPreference"));
 		if (!is_array($user) || (!isset($user['username']) && $usernameHtml === '')) return '';
 
 		if ($usernameHtml === '') {
@@ -55,23 +54,24 @@ class ThreePointStudio_CustomMarkupForUser_Helpers extends XenForo_Template_Help
 
 		if (empty($user['user_id'])) {
 			$user['display_style_group_id'] = XenForo_Model_User::$defaultGuestGroupId;
+		} elseif ($user['display_style_group_id'] == null) {
+			$user['display_style_group_id'] = XenForo_Application::getDb()->fetchOne("SELECT `display_style_group_id` FROM `xf_user` WHERE `user_id` = ?", $user["user_id"]);
 		}
-
 		$extraClasses = null;
 		if (isset($user['display_style_group_id']) && isset(XenForo_Template_Helper_Core::$_displayStyles[$user['display_style_group_id']])) {
 			$style = XenForo_Template_Helper_Core::$_displayStyles[$user['display_style_group_id']];
-			$extraClasses = ($style['username_css'] and $options->get("3ps_cmfu_usernameStylingPreference") != 2) ? 'style' . $user['display_style_group_id'] : null;
+			$extraClasses = ($style['username_css'] and $stylingPref != 2) ? 'style' . $user['display_style_group_id'] : null;
 		}
 
 		$html = self::assembleCustomMarkup($user, "username");
 
-		if ($options->get("3ps_cmfu_usernameStylingPreference" == 0)) { // User Group markup first
-			$finalHTML = str_replace("{inner}", '<span class="' . $extraClasses . '">{inner}</span>', $finalHtml);
-		} elseif ($options->get("3ps_cmfu_usernameStylingPreference" == 1)) { // Custom markup first
-			$finalHtml = '<span class="' . $extraClasses . '">' . $finalHtml . '</span>';
+		if ($stylingPref == 0) { // User Group markup first
+			$finalHtml = str_replace("{inner}", '<span class="' . $extraClasses . '">{inner}</span>', $html);
+		} elseif ($stylingPref == 1) { // Custom markup first
+			$finalHtml = '<span class="' . $extraClasses . '">' . $html . '</span>';
 		}
-		$finalHTML = str_replace("{inner}", $usernameHtml, $html);
-		return $finalHTML;
+		$finalHtml = str_replace("{inner}", $usernameHtml, $finalHtml);
+		return $finalHtml;
 	}
 
 	public static function helperUserTitle($user, $allowCustomTitle = true) {

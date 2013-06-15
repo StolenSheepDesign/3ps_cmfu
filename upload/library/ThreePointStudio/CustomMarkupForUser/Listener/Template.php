@@ -11,7 +11,6 @@ class ThreePointStudio_CustomMarkupForUser_Listener_Template {
 			$visitor = XenForo_Visitor::getInstance();
 			if (!$visitor->hasPermission("3ps_cmfu", "canUseCMFUSystem")) return;
 			$renderHTML = "";
-
 			$fullUserOptions = unserialize($visitor["3ps_cmfu_options"]);
 			foreach ($fullUserOptions as $category => $catArray) {
 				foreach ($catArray as $itemName => $itemValue) {
