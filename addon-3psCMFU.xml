@@ -3,7 +3,60 @@
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
-  <admin_templates/>
+  <admin_templates>
+    <template title="3ps_cmfu_cmcontrol"><![CDATA[<h3 class="sectionHeader">{xen:phrase 3ps_cmfu_x_markup, 'title={$title}'}</h3>
+	<xen:controlunit label="{xen:phrase 3ps_cmfu_users_current_x_markup, 'title={$title}'}">{xen:raw $currentMarkupRender}</xen:controlunit>
+	<xen:checkboxunit label="{xen:phrase 3ps_cmfu_x_text_effects, 'title={$title}'}">
+		<xen:option name="3ps_cmfu_options[{$titleCode}][bold]" selected="{$userOptions.bold}">{xen:phrase 3ps_cmfu_apply_bold_effect_to_x, 'title={$title}'}</xen:option>
+		<xen:option name="3ps_cmfu_options[{$titleCode}][italic]" selected="{$userOptions.italic}">{xen:phrase 3ps_cmfu_apply_italic_effect_to_x, 'title={$title}'}</xen:option>
+		<xen:option name="3ps_cmfu_options[{$titleCode}][underline]" selected="{$userOptions.underline}">{xen:phrase 3ps_cmfu_underline_x, 'title={$title}'}</xen:option>
+		<xen:option name="3ps_cmfu_options[{$titleCode}][strike]" selected="{$userOptions.strike}">{xen:phrase 3ps_cmfu_strike_through_x, 'title={$title}'}</xen:option>
+		<xen:option name="3ps_cmfu_options[{$titleCode}][overline]" selected="{$userOptions.overline}">{xen:phrase 3ps_cmfu_overline_x, 'title={$title}'}</xen:option>
+		<xen:option name="3ps_cmfu_options[{$titleCode}][enable_text_colour]" selected="{$userOptions.enable_text_colour}" label="{xen:phrase 3ps_cmfu_enable_x_colour, 'title={$title}'}">
+			<xen:select name="3ps_cmfu_options[{$titleCode}][text_colour]" value="{$userOptions.text_colour}">
+				<xen:foreach loop="$colourList" key="$colourName" value="$colour">
+					<xen:option style="color: {$colour};" value="{$colour}" selected="{$userOptions.text_colour}">{$colourName}</xen:option>
+				</xen:foreach>
+			</xen:select>
+		</xen:option>
+		<xen:option name="3ps_cmfu_options[{$titleCode}][enable_font_face]" selected="{$userOptions.enable_font_face}" label="{xen:phrase 3ps_cmfu_enable_x_font, 'title={$title}'}">
+			<xen:select name="3ps_cmfu_options[{$titleCode}][font_face]" value="{$userOptions.font_face}" label="{xen:phrase 3ps_cmfu_x_font, 'title={$title}'}: ">
+				<xen:foreach loop="$fontList" key="$fontId" value="$fontValue">
+					<xen:option style="font-family: {xen:raw $fontValue.fullname};" value="{$fontId}" selected="{$userOptions.font_face}">{$fontValue.name}</xen:option>
+				</xen:foreach>
+			</xen:select>
+		</xen:option>
+	</xen:checkboxunit>
+
+	<xen:checkboxunit label="{xen:phrase 3ps_cmfu_x_background_and_borders, 'title={$title}'}">
+		<xen:option name="3ps_cmfu_options[{$titleCode}][enable_background_colour]" selected="{$userOptions.enable_background_colour}" label="{xen:phrase 3ps_cmfu_enable_x_background_colour, 'title={$title}'}">
+			<xen:select name="3ps_cmfu_options[{$titleCode}][background_colour]" value="{$userOptions.background_colour}" label="{xen:phrase 3ps_cmfu_background_colour}:">
+				<xen:foreach loop="$colourList" key="$colourName" value="$colour">
+					<xen:option style="color: {$colour};" value="{$colour}" selected="{$userOptions.background_colour}">{$colourName}</xen:option>
+				</xen:foreach>
+			</xen:select>
+		</xen:option>
+		<xen:option name="3ps_cmfu_options[{$titleCode}][border]" selected="{$userOptions.border}" label="{xen:phrase 3ps_cmfu_enable_x_border, 'title={$title}'}">
+			<xen:disabled>
+				<xen:checkbox>
+					<xen:option name="3ps_cmfu_options[{$titleCode}][enable_border_colour]" selected="{$userOptions.enable_border_colour}" label="{xen:phrase 3ps_cmfu_enable_x_border_colour, 'title={$title}'}">
+						<xen:select name="3ps_cmfu_options[{$titleCode}][border_colour]" value="{$userOptions.border_colour}" label="{xen:phrase 3ps_cmfu_border_colour}">
+							<xen:foreach loop="$colourList" key="$colourName" value="$colour">
+								<xen:option style="color: {$colour};" value="{$colour}" selected="{$userOptions.border_colour}">{$colourName}</xen:option>
+							</xen:foreach>
+						</xen:select>
+					</xen:option>
+					<xen:option name="3ps_cmfu_options[{$titleCode}][enable_border_style]" selected="{$userOptions.enable_border_style}" label="{xen:phrase 3ps_cmfu_enable_x_border_style, 'title={$title}'}">
+						<xen:select name="3ps_cmfu_options[{$titleCode}][border_style]" value="{$userOptions.border_style}" label="{xen:phrase 3ps_cmfu_border_style}">
+							<xen:options source="$borderList" />
+						</xen:select>
+					</xen:option>
+				</xen:checkbox>
+			</xen:disabled>
+		</xen:option>
+	</xen:checkboxunit>]]></template>
+    <template title="3ps_cmfu_user_edit_tab"><![CDATA[<li id="tab3psCMFU"><a>{xen:phrase 3ps_cmfu_custom_markup}</a></li>]]></template>
+  </admin_templates>
   <code_events/>
   <code_event_listeners>
     <listener event_id="init_dependencies" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Init" callback_method="initDependencies" active="1" description=""/>
@@ -84,6 +137,7 @@ value</sub_options>
     <phrase title="3ps_cmfu_border_style" version_id="1" version_string="1.0.0"><![CDATA[Border Style]]></phrase>
     <phrase title="3ps_cmfu_border_style_option_invalid" version_id="1" version_string="1.0.0"><![CDATA[Border style option invalid.]]></phrase>
     <phrase title="3ps_cmfu_colour_code_invalid" version_id="1" version_string="1.0.0"><![CDATA[Colour code invalid.]]></phrase>
+    <phrase title="3ps_cmfu_custom_markup" version_id="1" version_string="1.0.0 Alpha 2"><![CDATA[Custom Markup]]></phrase>
     <phrase title="3ps_cmfu_enable_x_background_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} background colour]]></phrase>
     <phrase title="3ps_cmfu_enable_x_border" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border]]></phrase>
     <phrase title="3ps_cmfu_enable_x_border_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border colour]]></phrase>
@@ -97,6 +151,7 @@ value</sub_options>
     <phrase title="3ps_cmfu_strike_through_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: line-through;">Strike through</span> {title}]]></phrase>
     <phrase title="3ps_cmfu_underline_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Underline option selection invalid.]]></phrase>
     <phrase title="3ps_cmfu_underline_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: underline;">Underline</span> {title}]]></phrase>
+    <phrase title="3ps_cmfu_users_current_x_markup" version_id="1" version_string="1.0.0 Alpha 2"><![CDATA[User's current {title} markup]]></phrase>
     <phrase title="3ps_cmfu_user_title" version_id="1" version_string="1.0.0"><![CDATA[User Title]]></phrase>
     <phrase title="3ps_cmfu_x_background_and_borders" version_id="1" version_string="1.0.0"><![CDATA[Background And Borders]]></phrase>
     <phrase title="3ps_cmfu_x_colour" version_id="1" version_string="1.0.0"><![CDATA[{title} colour]]></phrase>

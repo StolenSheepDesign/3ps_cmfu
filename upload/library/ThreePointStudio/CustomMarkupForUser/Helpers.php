@@ -189,6 +189,21 @@ class ThreePointStudio_CustomMarkupForUser_Helpers extends XenForo_Template_Help
 		return $str;
 	}
 
+	public static function prepareSerializedOptionsForView($options) {
+		$fullUserOptions = unserialize($options);
+		if (!$fullUserOptions) {
+			$fullUserOptions = ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray;
+		}
+		foreach ($fullUserOptions as $category => $catArray) {
+			foreach ($catArray as $itemName => $itemValue) {
+				if (isset(ThreePointStudio_CustomMarkupForUser_Constants::$availableMarkups[$itemName]["enable_prefix"])) { // This item has an enable_ marker, tick it as well
+					$fullUserOptions[$category]["enable_" . $itemName] = true;
+				}
+			}
+		}
+		return $fullUserOptions;
+	}
+
 	public static function verifyColour($itemValue) {
 		return (preg_match("/^#[a-fA-F0-9]{6}$/", $itemValue) or $itemValue == "");
 	}

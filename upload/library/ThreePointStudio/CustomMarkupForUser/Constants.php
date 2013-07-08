@@ -111,7 +111,7 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
 			"enable_prefix" => true,
 			"permission" => "canUseBorderStyleIn%sM",
 			"format" => array(
-				"span" => array("attr" => array("style" => array("border-style" => "{borderStyle}"), "fakeThing" => "thing"), "variableFeed" => array("borderStyle"))
+				"span" => array("attr" => array("style" => array("border-style" => "{borderStyle}")), "variableFeed" => array("borderStyle"))
 			),
 		),
 	);
@@ -291,5 +291,10 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
 		11 => array("name" => "Times New Roman", "fullname" => "'Times New Roman', Times, serif"),
 		12 => array("name" => "Trebuchet MS", "fullname" => "'Trebuchet MS', Helvetica, sans-serif"),
 		13 => array("name" => "Verdana", "fullname" => 'Verdana, Geneva, sans-serif'),
+	);
+
+	public static $defaultOptionsArray = array(
+		"username" => array(),
+		"usertitle" => array()
 	);
 }

@@ -5,21 +5,20 @@
 * See the LICENSE file within the package for details.
 */
 
-class ThreePointStudio_CustomMarkupForUser_ControllerPublic_Account extends XFCP_ThreePointStudio_CustomMarkupForUser_ControllerPublic_Account {
-
-	public function actionPreferencesSave() {
-		$response = parent::actionPreferencesSave();
+class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_User extends XFCP_ThreePointStudio_CustomMarkupForUser_ControllerAdmin_User {
+	public function actionSave() {
+		$response = parent::actionSave();
+		$userId = $this->_input->filterSingle('user_id', XenForo_Input::UINT);
+		if ($userId == 0) return $response; // Not sure why, but don't do it
 		$options = $this->_input->filterSingle("3ps_cmfu_options", XenForo_Input::ARRAY_SIMPLE);
-		$userPermissions = array(
-			"username" => ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkupPermissionForUser("username"),
-			"usertitle" => ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkupPermissionForUser("usertitle")
-		);
+
 		// For I am lazy
 		$finalData = array();
 		if (empty($options)) {
 			// Nothing in here, populate it with nothingness
 			$options = ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray;
 		}
+
 		// Pre-check cleanup
 		foreach ($options as $category => $catArray) {
 			foreach ($catArray as $itemName => $itemValue) {
@@ -34,12 +33,7 @@ class ThreePointStudio_CustomMarkupForUser_ControllerPublic_Account extends XFCP
 		foreach ($options as $category => $catArray) {
 			foreach ($catArray as $itemName => $itemValue) {
 				$itemArray = ThreePointStudio_CustomMarkupForUser_Constants::$availableMarkups[$itemName];
-				// Can we do this?
-				if (!$userPermissions[$category][$itemName]) {
-					unset($options[$category][$itemName]); // Validation failed
-					continue;
-				}
-				// Yes we can! Check if we have dependencies
+				// Check if we have dependencies
 				if (isset($itemArray["requires"])) {
 					foreach ($itemArray["requires"] as $requirement) {
 						if ($catArray[$requirement[0]] !== $requirement[1]) {
@@ -55,9 +49,9 @@ class ThreePointStudio_CustomMarkupForUser_ControllerPublic_Account extends XFCP
 		}
 
 		$dw = XenForo_DataWriter::create('XenForo_DataWriter_User');
-		$dw->setExistingData(XenForo_Visitor::getUserId());
+		$dw->setExistingData($userId);
 		$dw->set("3ps_cmfu_options", serialize($options));
 		$dw->save();
-		return $response; // No errors from our end, continue execution
+		return $response; // No error from our end, continue executing
 	}
 }
