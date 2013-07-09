@@ -60,6 +60,8 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_11 extends XenForo_Te
 			$finalHtml = str_replace("{inner}", '<span class="' . $extraClasses . '">{inner}</span>', $html);
 		} elseif ($stylingPref == 1) { // Custom markup first
 			$finalHtml = '<span class="' . $extraClasses . '">' . $html . '</span>';
+		} else { // Completely ignore User Group styling
+			$finalHtml = $html;
 		}
 		$finalHtml = str_replace("{inner}", $usernameHtml, $finalHtml);
 		return $finalHtml;
