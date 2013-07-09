@@ -7,7 +7,7 @@
 
 class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_11 extends XenForo_Template_Helper_Core {
 	public static function helperUserName(array $user, $class = '', $rich = false) {
-		if (!$rich and XenForo_Application::getOptions()->get("3ps_cmfu_overridePlainUsernameHelper")) {
+		if (intval(XenForo_Application::getOptions()->get("3ps_cmfu_overridePlainUsernameHelper")) == 1) {
 			$rich = true;
 		}
 		return XenForo_Template_Helper_Core::callHelper('usernamehtml', array($user, '', $rich, array('class' => $class)));
