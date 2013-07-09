@@ -73,14 +73,15 @@ class ThreePointStudio_CustomMarkupForUser_Listener_Template {
 				// Clean up
 				$settingsTemplate->setParam("userOptions", null);
 				// Render user title
-				if (empty($user["custom_title"])) { // No user title
-					$user["custom_title"] = "(No Title Set)";
+				if (empty($user["custom_title"])) {
+					// No user title
+					$user["custom_title"] = "(No Custom Title Set)";
 				}
 				$settingsTemplate->setParams(array_merge(array(
 					"title" => new XenForo_Phrase("3ps_cmfu_user_title"),
 					"titleCode" => "usertitle",
 					"userOptions" => $fullUserOptions["usertitle"],
-					"currentMarkupRender" => XenForo_Template_Helper_Core::callHelper("usertitle", array($user))
+					"currentMarkupRender" => XenForo_Template_Helper_Core::callHelper("usertitle", array($user, true))
 				), $baseViewParams));
 				$renderHTML .= $settingsTemplate->render();
 				/* Things - AdminCP */
