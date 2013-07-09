@@ -57,15 +57,17 @@
 	</xen:checkboxunit>]]></template>
     <template title="3ps_cmfu_user_edit_tab"><![CDATA[<li id="tab3psCMFU"><a>{xen:phrase 3ps_cmfu_custom_markup}</a></li>]]></template>
   </admin_templates>
+  <admin_template_modifications/>
   <code_events/>
   <code_event_listeners>
-    <listener event_id="init_dependencies" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Init" callback_method="initDependencies" active="1" description=""/>
-    <listener event_id="load_class_controller" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassController" active="1" description=""/>
-    <listener event_id="load_class_datawriter" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassDataWriter" active="1" description=""/>
-    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="templateHook" active="1" description=""/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Init" callback_method="initDependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassController" active="1" hint="" description=""/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassDataWriter" active="1" hint="" description=""/>
+    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="templateHook" active="1" hint="" description=""/>
   </code_event_listeners>
   <cron/>
   <email_templates/>
+  <email_template_modifications/>
   <optiongroups>
     <group group_id="3ps_cmfu" display_order="1" debug_only="0"/>
     <option option_id="3ps_cmfu_overridePlainUsernameHelper" edit_format="onoff" data_type="boolean" can_backup="1">
@@ -123,8 +125,8 @@ value</sub_options>
     </permissions>
     <interface_groups>
       <interface_group interface_group_id="3ps_cumfu_general" display_order="1"/>
-      <interface_group interface_group_id="3ps_cumfu_username" display_order="1"/>
       <interface_group interface_group_id="3ps_cumfu_user_title" display_order="1"/>
+      <interface_group interface_group_id="3ps_cumfu_username" display_order="1"/>
     </interface_groups>
   </permissions>
   <phrases>
@@ -363,15 +365,17 @@ value</sub_options>
 </xen:if>
 ]]></template>
   </templates>
-  <bb_code_media_sites/>
   <template_modifications>
     <modification title="3ps_cmfu_top_username_styling" template_title="navigation_visitor_tab" execute_order="10" modification_type="str_replace" callback_class="" callback_method="" description="Apply custom styling to top username" version_id="1" version_string="1.0.0 Alpha 1" active="0">
       <search_value><![CDATA[{$visitor.username}]]></search_value>
       <replace_value><![CDATA[{xen:helper richusername, $visitor}]]></replace_value>
     </modification>
-    <modification title="3ps_cmfu_username_styling_in_online_list" template_title="sidebar_online_users" execute_order="10" modification_type="str_replace" callback_class="" callback_method="" description="Apply username styling in online users list" version_id="1" version_string="1.0.0 Alpha 1" active="1">
-      <search_value><![CDATA[class="username{xen:if '!{$user.visible}', ' invisible'}{xen:if {$user.followed}, ' followed'}">{$user.username}</a><xen:if is="{$i} < {$onlineUsers.limit}">,</xen:if>]]></search_value>
-      <replace_value><![CDATA[class="username{xen:if '!{$user.visible}', ' invisible'}{xen:if {$user.followed}, ' followed'}">{xen:helper richusername, $user}</a><xen:if is="{$i} < {$onlineUsers.limit}">,</xen:if>]]></replace_value>
-    </modification>
   </template_modifications>
+  <public_template_modifications>
+    <modification template="navigation_visitor_tab" modification_key="3ps_cmfu_top_username_styling" description="Apply custom styling to top username" execution_order="10" enabled="0" action="str_replace">
+      <find><![CDATA[{$visitor.username}]]></find>
+      <replace><![CDATA[{xen:helper richusername, $visitor}]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
 </addon>
