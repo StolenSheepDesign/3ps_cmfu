@@ -13,6 +13,9 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
 		if ($version == 0) {
 			$db->query("ALTER TABLE `xf_user` ADD `3ps_cmfu_options` BLOB NOT NULL");
 		}
+		if ($version < 3) { // 1.0.0 Beta 1 to 2
+			$db->query("ALTER TABLE `xf_user` CHANGE `3ps_cmfu_options` `3ps_cmfu_options` BLOB NOT NULL DEFAULT ''");
+		}
 	}
 
 	public static final function uninstall() {
