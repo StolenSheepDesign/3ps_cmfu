@@ -21,7 +21,7 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_12 extends XenForo_Te
 		if (!$rich and XenForo_Application::getOptions()->get("3ps_cmfu_overridePlainUsernameHelper") == 1) {
 			$rich = true;
 		}
-		if (!isset($user["3ps_cmfu_options"])) {
+		if (!isset($user["3ps_cmfu_options"]) and !($user["user_id"] < 1)) {
 			$user["3ps_cmfu_options"] = XenForo_Application::getDb()->fetchOne("SELECT `3ps_cmfu_options` FROM `xf_user` WHERE `user_id`=?", $user["user_id"]);
 		}
 		if ($rich) {
