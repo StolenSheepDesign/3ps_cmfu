@@ -33,7 +33,7 @@ class ThreePointStudio_CustomMarkupForUser_Listener_Template {
 					$renderHTML .= $settingsTemplate->render();
 				}
 				// Clean up
-				$settingsTemplate->setParam("userOptions", null);
+				$settingsTemplate = $template->create("3ps_cmfu_account_cmcontrol", $template->getParams());
 				// Render user title
 				if (empty($user["custom_title"])) { // No user title
 					$user["custom_title"] = "(No Title Set)";
@@ -71,7 +71,7 @@ class ThreePointStudio_CustomMarkupForUser_Listener_Template {
 				), $baseViewParams));
 				$renderHTML .= $settingsTemplate->render();
 				// Clean up
-				$settingsTemplate->setParam("userOptions", null);
+				$settingsTemplate = $template->create("3ps_cmfu_cmcontrol", $template->getParams());
 				// Render user title
 				if (empty($user["custom_title"])) {
 					// No user title
