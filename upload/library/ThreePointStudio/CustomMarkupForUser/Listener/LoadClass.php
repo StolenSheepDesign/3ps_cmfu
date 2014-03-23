@@ -6,22 +6,22 @@
 */
 
 class ThreePointStudio_CustomMarkupForUser_Listener_LoadClass {
-	public static function loadClassController($class, array &$extend) {
-		switch ($class) {
-			case "XenForo_ControllerPublic_Account":
-				$extend[] = "ThreePointStudio_CustomMarkupForUser_ControllerPublic_Account";
-				break;
-			case "XenForo_ControllerAdmin_User":
-				$extend[] = "ThreePointStudio_CustomMarkupForUser_ControllerAdmin_User";
-				break;
-		}
-	}
+    public static function loadClassController($class, array &$extend) {
+        switch ($class) {
+            case "XenForo_ControllerPublic_Account":
+                $extend[] = "ThreePointStudio_CustomMarkupForUser_ControllerPublic_Account";
+                break;
+            case "XenForo_ControllerAdmin_User":
+                $extend[] = "ThreePointStudio_CustomMarkupForUser_ControllerAdmin_User";
+                break;
+        }
+    }
 
-	public static function loadClassDataWriter($class, array &$extend) {
-		switch ($class) {
-			case "XenForo_DataWriter_User":
-				$extend[] = "ThreePointStudio_CustomMarkupForUser_DataWriter_User";
-				break;
-		}
-	}
+    public static function loadClassDataWriter($class, array &$extend) {
+        switch ($class) {
+            case "XenForo_DataWriter_User":
+                $extend[] = "ThreePointStudio_CustomMarkupForUser_DataWriter_User";
+                break;
+        }
+    }
 }

@@ -6,10 +6,10 @@
 */
 
 class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_12 extends ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base {
-	public static function helperUserTitle($user, $allowCustomTitle = true, $withBanner = false) {
-		$result = parent::helperUserTitle($user, $allowCustomTitle);
-		$html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($user, "usertitle");
-		$finalHTML = str_replace("{inner}", $result, $html);
-		return $finalHTML;
-	}
+    public static function helperUserTitle($user, $allowCustomTitle = true, $withBanner = false) {
+        $result = parent::helperUserTitle($user, $allowCustomTitle);
+        $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($user, "usertitle");
+        $finalHTML = str_replace("{inner}", $result, $html);
+        return $finalHTML;
+    }
 }
