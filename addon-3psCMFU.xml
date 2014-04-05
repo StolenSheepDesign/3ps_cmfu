@@ -658,8 +658,6 @@ Please support me by always keeping this box checked. This notice will not displ
     <phrase title="option_3ps_cmfu_useCache_explain" version_id="3" version_string="1.0.0"><![CDATA[Turn on this option to pre-build user markup. Recommended for performance reasons.]]></phrase>
     <phrase title="option_3ps_cmfu_usernameStylingPreference" version_id="1" version_string="1.0.0"><![CDATA[Username Styling Preference]]></phrase>
     <phrase title="option_3ps_cmfu_usernameStylingPreference_explain" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
-    <phrase title="option_3ps_usergroup_ranks_max_items_per_row" version_id="1" version_string="1.0.0"><![CDATA[Maximum Rank Items Per Row]]></phrase>
-    <phrase title="option_3ps_usergroup_ranks_max_items_per_row_explain" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="option_group_3ps_cmfu" version_id="3" version_string="1.0.0"><![CDATA[[3.studIo] Custom Markup For Users Options]]></phrase>
     <phrase title="option_group_3ps_cmfu_description" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="permission_3ps_cmfu_canUseBGColourInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use background colour]]></phrase>
