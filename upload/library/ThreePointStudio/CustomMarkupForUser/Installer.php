@@ -19,7 +19,6 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
                 $db->query("ALTER TABLE `xf_user` ADD COLUMN `3ps_cmfu_render_cache` BLOB NOT NULL AFTER `3ps_cmfu_options`");
             }
         }
-
     }
 
     public static final function uninstall() {
