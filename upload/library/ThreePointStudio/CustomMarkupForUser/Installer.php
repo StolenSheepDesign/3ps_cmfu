@@ -24,6 +24,6 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
 
     public static final function uninstall() {
         $db = XenForo_Application::getDb();
-        $db->query("ALTER TABLE `xf_user` DROP `3ps_cmfu_options`, `3ps_cmfu_render_cache`");
+        $db->query("ALTER TABLE `xf_user` DROP COLUMN `3ps_cmfu_options`, `3ps_cmfu_render_cache`");
     }
 }
