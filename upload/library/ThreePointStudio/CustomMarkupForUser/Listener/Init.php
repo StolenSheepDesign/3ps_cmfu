@@ -7,14 +7,11 @@
 
 class ThreePointStudio_CustomMarkupForUser_Listener_Init {
     public static function initDependencies(XenForo_Dependencies_Abstract $dependencies, array $data) {
-        if (XenForo_Application::$versionId < 1020000) {
-            class_alias("ThreePointStudio_CustomMarkupForUser_TemplateHelpers_11", "ThreePointStudio_CustomMarkupForUser_TemplateHelpers");
-        } else {
-            class_alias("ThreePointStudio_CustomMarkupForUser_TemplateHelpers_12", "ThreePointStudio_CustomMarkupForUser_TemplateHelpers");
-        }
+        class_alias("ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base", "ThreePointStudio_CustomMarkupForUser_TemplateHelpers");
         XenForo_Template_Helper_Core::$helperCallbacks["username"] = array("ThreePointStudio_CustomMarkupForUser_TemplateHelpers", "helperUserName");
         XenForo_Template_Helper_Core::$helperCallbacks["richusername"] = array("ThreePointStudio_CustomMarkupForUser_TemplateHelpers", "helperRichUserName");
         XenForo_Template_Helper_Core::$helperCallbacks["usernamehtml"] = array("ThreePointStudio_CustomMarkupForUser_TemplateHelpers", "helperUserNameHtml");
         XenForo_Template_Helper_Core::$helperCallbacks["usertitle"] = array("ThreePointStudio_CustomMarkupForUser_TemplateHelpers", "helperUserTitle");
+        XenForo_Template_Helper_Core::$helperCallbacks["plainusertitle"] = array("ThreePointStudio_CustomMarkupForUser_TemplateHelpers", "helperPlainUserTitle");
     }
 }

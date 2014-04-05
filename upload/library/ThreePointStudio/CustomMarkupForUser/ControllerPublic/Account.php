@@ -55,10 +55,10 @@ class ThreePointStudio_CustomMarkupForUser_ControllerPublic_Account extends XFCP
         $dw = XenForo_DataWriter::create('XenForo_DataWriter_User');
         $dw->setExistingData(XenForo_Visitor::getUserId());
         $dw->set("3ps_cmfu_options", serialize($options));
+        $dw->save();
         if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
             $dw->rebuildCustomMarkupCache();
         }
-        $dw->save();
         return $response; // No errors from our end, continue execution
     }
 }

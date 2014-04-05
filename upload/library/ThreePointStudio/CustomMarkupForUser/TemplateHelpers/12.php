@@ -10,7 +10,7 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_12 extends ThreePoint
         $result = parent::helperUserTitle($user, $allowCustomTitle);
         if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
             $renderCache = unserialize($user["3ps_cmfu_render_cache"]);
-            $html = $renderCache["username"];
+            $html = $renderCache["usertitle"];
         } else {
             $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup(unserialize($user["3ps_cmfu_options"]), "usertitle");
         }

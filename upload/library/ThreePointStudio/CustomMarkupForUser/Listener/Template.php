@@ -85,6 +85,16 @@ class ThreePointStudio_CustomMarkupForUser_Listener_Template {
                 /* Things - AdminCP */
                 $contents .= "<li>" . $renderHTML . "</li>";
                 break;
+            case "footer":
+                $displayCredit = (bool) XenForo_Application::getOptions()->get("3ps_cmfu_displayCreditNotice");
+                $creditNotice = ($displayCredit) ? new XenForo_Phrase("3ps_cmfu_credit_notice") : '';
+                $copyrightText = new XenForo_Phrase("xenforo_copyright");
+                $search = '<div id="copyright">' . $copyrightText;
+                $replace = '<div id="copyright">' . $copyrightText .
+                    ($displayCredit ? '<br /><div id="3ps_cmfu_credit_notice">' . $creditNotice."</div>" : '') .
+                    '<!-- This forum uses [3.studIo] Custom Markup For User, licensed under the BSD 2-Clause Modified License. DO NOT REMOVE THIS NOTICE! -->' . PHP_EOL;
+                $contents = str_replace($search, $replace, $contents);
+                break;
         }
     }
 }

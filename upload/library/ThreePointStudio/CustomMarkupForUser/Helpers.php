@@ -148,7 +148,7 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
         if (!$options) {
             $options = ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray;
         }
-        if (!!isset($options[$category])) { // No styling option set
+        if (!isset($options[$category])) { // No styling option set
             return "{inner}";
         }
 

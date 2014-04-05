@@ -19,7 +19,7 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
         if (!isset($user["3ps_cmfu_options"])) {
             $user["3ps_cmfu_options"] = XenForo_Application::getDb()->fetchOne("SELECT `3ps_cmfu_options` FROM `xf_user` WHERE `user_id`=?", $user["user_id"]);
         }
-        if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache") && !isset($user["3ps_cmfu_options"])) {
+        if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache") && !isset($user["3ps_cmfu_render_cache"])) {
             $user["3ps_cmfu_render_cache"] = XenForo_Application::getDb()->fetchOne("SELECT `3ps_cmfu_render_cache` FROM `xf_user` WHERE `user_id`=?", $user["user_id"]);
         }
         if ($rich) {
@@ -68,5 +68,21 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
             }
         }
         return str_replace("{inner}", $usernameHtml, $html);
+    }
+
+    public static function helperUserTitle($user, $allowCustomTitle = true, $withBanner = false) {
+        $result = parent::helperUserTitle($user, $allowCustomTitle, $withBanner);
+        if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
+            $renderCache = unserialize($user["3ps_cmfu_render_cache"]);
+            $html = $renderCache["usertitle"];
+        } else {
+            $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup(unserialize($user["3ps_cmfu_options"]), "usertitle");
+        }
+        $finalHTML = str_replace("{inner}", $result, $html);
+        return $finalHTML;
+    }
+
+    public static function helperPlainUserTitle($user, $allowCustomTitle = true, $withBanner = false) {
+        return parent::helperUserTitle($user, $allowCustomTitle, $withBanner);
     }
 }

@@ -13,7 +13,7 @@ class ThreePointStudio_CustomMarkupForUser_DataWriter_User extends XFCP_ThreePoi
         return $fields;
     }
 
-    public function rebuildCustomMarkupCache($category=null) {
-        $this->_getUserModel()->rebuildCustomMarkupCache($this->get("user_id"), $category);
+    public function rebuildCustomMarkupCache() {
+        $this->_getUserModel()->rebuildCustomMarkupCache($this->get("user_id"));
     }
 }
