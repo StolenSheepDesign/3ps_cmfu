@@ -19,11 +19,13 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
                 $db->query("ALTER TABLE `xf_user` ADD COLUMN `3ps_cmfu_render_cache` BLOB NOT NULL AFTER `3ps_cmfu_options`");
             }
         }
-        XenForo_Application::defer("ThreePointStudio_CustomMarkupForUser_Deferred_UserMarkup", array());
+
     }
 
     public static final function uninstall() {
         $db = XenForo_Application::getDb();
-        $db->query("ALTER TABLE `xf_user` DROP COLUMN `3ps_cmfu_options`, `3ps_cmfu_render_cache`");
+        $db->query("ALTER TABLE `xf_user`
+                    DROP COLUMN `3ps_cmfu_options`,
+                    DROP COLUMN `3ps_cmfu_render_cache`");
     }
 }
