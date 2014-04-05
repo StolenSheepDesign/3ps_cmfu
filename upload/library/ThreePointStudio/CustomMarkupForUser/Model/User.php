@@ -27,4 +27,12 @@ class ThreePointStudio_CustomMarkupForUser_Model_User extends XFCP_ThreePointStu
             'user_id = ' . $db->quote($userId)
         );
     }
+
+    public function insertDefaultCustomMarkup($userId) {
+        $db = $this->_getDb();
+        $db->update("xf_user",
+            array("3ps_cmfu_options" => serialize(ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray)),
+            'user_id = ' . $db->quote($userId)
+        );
+    }
 }

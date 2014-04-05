@@ -51,6 +51,12 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
             $style = XenForo_Template_Helper_Core::$_displayStyles[$user['display_style_group_id']];
             $extraClasses = ($style['username_css'] && $stylingPref != 2) ? 'style' . $user['display_style_group_id'] : null;
         }
+
+        $options = unserialize($user["3ps_cmfu_options"]);
+        if (!$options) {
+            $options = ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray;
+            XenForo_Model::create("XenForo_Model_User")->insertDefaultCustomMarkup($user["user_id"]);
+        }
         if (empty($user["user_id"])) {
             $html = "{inner}";
         } elseif (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
@@ -58,11 +64,11 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
             if (!empty($renderCache) && !empty($renderCache["username"])) {
                 $html = $renderCache["username"];
             } else {
-                $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup(unserialize($user["3ps_cmfu_options"]), "username");
+                $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "username");
                 XenForo_Model::create("XenForo_Model_User")->rebuildCustomMarkupCache($user["user_id"]);
             }
         } else {
-            $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup(unserialize($user["3ps_cmfu_options"]), "username");
+            $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "username");
         }
         if ($stylingPref == 0) { // User Group markup first
             if (!is_null($extraClasses)) {
@@ -78,16 +84,21 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
 
     public static function helperUserTitle($user, $allowCustomTitle = true, $withBanner = false) {
         $result = parent::helperUserTitle($user, $allowCustomTitle, $withBanner);
+        $options = unserialize($user["3ps_cmfu_options"]);
+        if (!$options) {
+            $options = ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray;
+            XenForo_Model::create("XenForo_Model_User")->insertDefaultCustomMarkup($user["user_id"]);
+        }
         if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
             $renderCache = unserialize($user["3ps_cmfu_render_cache"]);
             if (!empty($renderCache) && !empty($renderCache["usertitle"])) {
                 $html = $renderCache["usertitle"];
             } else {
-                $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup(unserialize($user["3ps_cmfu_options"]), "usertitle");
+                $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "usertitle");
                 XenForo_Model::create("XenForo_Model_User")->rebuildCustomMarkupCache($user["user_id"]);
             }
         } else {
-            $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup(unserialize($user["3ps_cmfu_options"]), "usertitle");
+            $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "usertitle");
         }
         $finalHTML = str_replace("{inner}", $result, $html);
         return $finalHTML;
