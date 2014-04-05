@@ -19,7 +19,7 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
         return $array;
     }
 
-    public static function array_columns($input = null, $columnKey = null, $indexKey = null) {
+    public static function array_column($input = null, $columnKey = null, $indexKey = null) {
         if (!function_exists('array_column')) {
             /**
              * This file is part of the array_column library
@@ -122,8 +122,9 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
                 return $resultArray;
             }
         }
-        array_column($input, $columnKey, $indexKey);
+        return array_column($input, $columnKey, $indexKey);
     }
+
     # From http://kvz.io/blog/2008/09/05/php-recursive-str-replace-replacetree/
     public static function strReplaceRecursive($search="", $replace="", $array=false, $keys_too=false) {
         if (!is_array($array)) {
@@ -162,7 +163,7 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
                         $tag[1] = self::replacePlaceholders($var, $tag[1], $optionValue);
                     }
                 }
-                $firstOccurrence = array_search($tag[0], array_column($sortedTags, 0));
+                $firstOccurrence = array_search($tag[0], self::array_column($sortedTags, 0));
                 if ($firstOccurrence !== false) {
                     $firstOccurrenceTag = &$sortedTags[$firstOccurrence];
                     // Try to see if we can merge the properties
