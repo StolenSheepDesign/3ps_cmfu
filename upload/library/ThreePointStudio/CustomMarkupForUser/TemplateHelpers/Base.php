@@ -19,6 +19,9 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
         if (!isset($user["3ps_cmfu_options"])) {
             $user["3ps_cmfu_options"] = XenForo_Application::getDb()->fetchOne("SELECT `3ps_cmfu_options` FROM `xf_user` WHERE `user_id`=?", $user["user_id"]);
         }
+        if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache") && !isset($user["3ps_cmfu_options"])) {
+            $user["3ps_cmfu_render_cache"] = XenForo_Application::getDb()->fetchOne("SELECT `3ps_cmfu_render_cache` FROM `xf_user` WHERE `user_id`=?", $user["user_id"]);
+        }
         if ($rich) {
             $username = XenForo_Template_Helper_Core::callHelper('richusername', array($user, $username));
         }
@@ -49,16 +52,21 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
             $extraClasses = ($style['username_css'] and $stylingPref != 2) ? 'style' . $user['display_style_group_id'] : null;
         }
 
-        $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($user, "username");
-
-        if ($stylingPref == 0) { // User Group markup first
-            $finalHtml = str_replace("{inner}", '<span class="' . $extraClasses . '">{inner}</span>', $html);
-        } elseif ($stylingPref == 1) { // Custom markup first
-            $finalHtml = '<span class="' . $extraClasses . '">' . $html . '</span>';
-        } else { // Completely ignore User Group styling
-            $finalHtml = $html;
+        if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
+            $renderCache = unserialize($user["3ps_cmfu_render_cache"]);
+            $html = $renderCache["username"];
+        } else {
+            $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup(unserialize($user["3ps_cmfu_options"]), "username");
         }
-        $finalHtml = str_replace("{inner}", $usernameHtml, $finalHtml);
-        return $finalHtml;
+        if ($stylingPref == 0) { // User Group markup first
+            if (!is_null($extraClasses)) {
+                $html = str_replace("{inner}", '<span class="' . $extraClasses . '">{inner}</span>', $html);
+            }
+        } elseif ($stylingPref == 1) { // Custom markup first
+            if (!is_null($extraClasses)) {
+                $html = '<span class="' . $extraClasses . '">' . $html . '</span>';
+            }
+        }
+        return str_replace("{inner}", $usernameHtml, $html);
     }
 }

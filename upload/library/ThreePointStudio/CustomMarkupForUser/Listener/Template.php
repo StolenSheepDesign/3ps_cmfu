@@ -85,14 +85,6 @@ class ThreePointStudio_CustomMarkupForUser_Listener_Template {
                 /* Things - AdminCP */
                 $contents .= "<li>" . $renderHTML . "</li>";
                 break;
-            case "page_container_js_body":
-                $visitor = XenForo_Visitor::getInstance();
-                if (!$visitor->hasPermission("3ps_cmfu", "canUseCMFUSystem")) return;
-
-                //if (strpos($template->_params["requestPaths"]["requestUri"], "account/preferences") !== false) {
-                        //$contents .= $template->create("3ps_cmfu_footer_js", $template->getParams())->render();
-                //}
-                break;
         }
     }
 }

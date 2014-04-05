@@ -1,275 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="3psCMFU" title="[3.studIo] Custom Markup For Users Options" version_string="1.0.0" version_id="3" url="http://xenforo.com/community/resources/3-studio-custom-markup-for-users.1958/" install_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" install_callback_method="install" uninstall_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="3psCMFU" title="[3.studIo] Custom Markup For Users" version_string="1.0.0" version_id="3" url="http://xenforo.com/community/resources/3-studio-custom-markup-for-users.1958/" install_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" install_callback_method="install" uninstall_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
   <admin_templates>
-    <template title="3ps_cmfu_cmcontrol"><![CDATA[<h3 class="sectionHeader">{xen:phrase 3ps_cmfu_x_markup, 'title={$title}'}</h3>
-	<xen:controlunit label="{xen:phrase 3ps_cmfu_users_current_x_markup, 'title={$title}'}">{xen:raw $currentMarkupRender}</xen:controlunit>
-	<xen:checkboxunit label="{xen:phrase 3ps_cmfu_x_text_effects, 'title={$title}'}">
-		<xen:option name="3ps_cmfu_options[{$titleCode}][bold]" selected="{$userOptions.bold}">{xen:phrase 3ps_cmfu_apply_bold_effect_to_x, 'title={$title}'}</xen:option>
-		<xen:option name="3ps_cmfu_options[{$titleCode}][italic]" selected="{$userOptions.italic}">{xen:phrase 3ps_cmfu_apply_italic_effect_to_x, 'title={$title}'}</xen:option>
-		<xen:option name="3ps_cmfu_options[{$titleCode}][underline]" selected="{$userOptions.underline}">{xen:phrase 3ps_cmfu_underline_x, 'title={$title}'}</xen:option>
-		<xen:option name="3ps_cmfu_options[{$titleCode}][strike]" selected="{$userOptions.strike}">{xen:phrase 3ps_cmfu_strike_through_x, 'title={$title}'}</xen:option>
-		<xen:option name="3ps_cmfu_options[{$titleCode}][overline]" selected="{$userOptions.overline}">{xen:phrase 3ps_cmfu_overline_x, 'title={$title}'}</xen:option>
-		<xen:option name="3ps_cmfu_options[{$titleCode}][enable_text_colour]" selected="{$userOptions.enable_text_colour}" label="{xen:phrase 3ps_cmfu_enable_x_colour, 'title={$title}'}">
-			<xen:select name="3ps_cmfu_options[{$titleCode}][text_colour]" value="{$userOptions.text_colour}">
-				<xen:foreach loop="$colourList" key="$colourName" value="$colour">
-					<xen:option style="color: {$colour};" value="{$colour}" selected="{$userOptions.text_colour} == {$colour}">{$colourName}</xen:option>
-				</xen:foreach>
-			</xen:select>
-		</xen:option>
-		<xen:option name="3ps_cmfu_options[{$titleCode}][enable_font_face]" selected="{$userOptions.enable_font_face}" label="{xen:phrase 3ps_cmfu_enable_x_font, 'title={$title}'}">
-			<xen:select name="3ps_cmfu_options[{$titleCode}][font_face]" value="{$userOptions.font_face}" label="{xen:phrase 3ps_cmfu_x_font, 'title={$title}'}: ">
-				<xen:foreach loop="$fontList" key="$fontId" value="$fontValue">
-					<xen:option style="font-family: {xen:raw $fontValue.fullname};" value="{$fontId}" selected="{$userOptions.font_face} == {$fontId}">{$fontValue.name}</xen:option>
-				</xen:foreach>
-			</xen:select>
-		</xen:option>
-	</xen:checkboxunit>
+    <template title="3ps_cmfu.js"><![CDATA[<script type="text/javascript">
+$(function () {
+    var currentMarkupInstance = $('#currentMarkup_{$titleCode}');
 
-	<xen:checkboxunit label="{xen:phrase 3ps_cmfu_x_background_and_borders, 'title={$title}'}">
-		<xen:option name="3ps_cmfu_options[{$titleCode}][enable_background_colour]" selected="{$userOptions.enable_background_colour}" label="{xen:phrase 3ps_cmfu_enable_x_background_colour, 'title={$title}'}">
-			<xen:select name="3ps_cmfu_options[{$titleCode}][background_colour]" value="{$userOptions.background_colour}" label="{xen:phrase 3ps_cmfu_background_colour}:">
-				<xen:foreach loop="$colourList" key="$colourName" value="$colour">
-					<xen:option style="{$colour}" value="{$colour}" selected="{$userOptions.background_colour} == {$colour}">{$colourName}</xen:option>
-				</xen:foreach>
-			</xen:select>
-		</xen:option>
-		<xen:option name="3ps_cmfu_options[{$titleCode}][border]" selected="{$userOptions.border}" label="{xen:phrase 3ps_cmfu_enable_x_border, 'title={$title}'}">
-			<xen:disabled>
-				<xen:checkbox>
-					<xen:option name="3ps_cmfu_options[{$titleCode}][enable_border_colour]" selected="{$userOptions.enable_border_colour}" label="{xen:phrase 3ps_cmfu_enable_x_border_colour, 'title={$title}'}">
-						<xen:select name="3ps_cmfu_options[{$titleCode}][border_colour]" value="{$userOptions.border_colour}" label="{xen:phrase 3ps_cmfu_border_colour}">
-							<xen:foreach loop="$colourList" key="$colourName" value="$colour">
-								<xen:option style="color: {$colour};" value="{$colour}" selected="{$userOptions.border_colour} == {$colour}">{$colourName}</xen:option>
-							</xen:foreach>
-						</xen:select>
-					</xen:option>
-					<xen:option name="3ps_cmfu_options[{$titleCode}][enable_border_style]" selected="{$userOptions.enable_border_style}" label="{xen:phrase 3ps_cmfu_enable_x_border_style, 'title={$title}'}">
-						<xen:select name="3ps_cmfu_options[{$titleCode}][border_style]" value="{$userOptions.border_style}" label="{xen:phrase 3ps_cmfu_border_style}">
-							<xen:options source="$borderList" />
-						</xen:select>
-					</xen:option>
-				</xen:checkbox>
-			</xen:disabled>
-		</xen:option>
-	</xen:checkboxunit>]]></template>
-    <template title="3ps_cmfu_user_edit_tab"><![CDATA[<li id="tab3psCMFU"><a>{xen:phrase 3ps_cmfu_custom_markup}</a></li>]]></template>
-  </admin_templates>
-  <admin_template_modifications/>
-  <code_events/>
-  <code_event_listeners>
-    <listener event_id="init_dependencies" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Init" callback_method="initDependencies" active="1" hint="" description=""/>
-    <listener event_id="load_class_controller" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassController" active="1" hint="" description=""/>
-    <listener event_id="load_class_datawriter" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassDataWriter" active="1" hint="" description=""/>
-    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="templateHook" active="1" hint="" description=""/>
-  </code_event_listeners>
-  <cron/>
-  <email_templates/>
-  <email_template_modifications/>
-  <optiongroups>
-    <group group_id="3ps_cmfu" display_order="1" debug_only="0"/>
-    <option option_id="3ps_cmfu_overridePlainUsernameHelper" edit_format="onoff" data_type="boolean" can_backup="1">
-      <default_value>0</default_value>
-      <edit_format_params></edit_format_params>
-      <sub_options></sub_options>
-      <relation group_id="3ps_cmfu" display_order="1"/>
-    </option>
-    <option option_id="3ps_cmfu_usernameStylingPreference" edit_format="radio" data_type="unsigned_integer" can_backup="1">
-      <default_value>1</default_value>
-      <edit_format_params>0=User Group styling CSS first
-1=Custom Username Markup first
-2=Completely ignore User Group styling CSS</edit_format_params>
-      <sub_options></sub_options>
-      <relation group_id="3ps_cmfu" display_order="2"/>
-    </option>
-    <option option_id="3ps_usergroup_ranks_max_items_per_row" edit_format="template" data_type="array" can_backup="1">
-      <default_value></default_value>
-      <edit_format_params>3ps_usergroup_ranks_max_items_per_row_option</edit_format_params>
-      <sub_options>style
-value</sub_options>
-      <relation group_id="3ps_usergroup_ranks" display_order="100"/>
-    </option>
-  </optiongroups>
-  <permissions>
-    <permission_groups>
-      <permission_group permission_group_id="3ps_cmfu"/>
-    </permission_groups>
-    <permissions>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBGColourInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="8"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBGColourInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="9"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBoldInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="1"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBoldInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="2"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderColourInUNM" permission_type="flag" depend_permission_id="canUseBorderInUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="10"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderColourInUTM" permission_type="flag" depend_permission_id="canUseBorderInUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="11"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="9"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="10"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderStyleInUNM" permission_type="flag" depend_permission_id="canUseBorderInUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="12"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderStyleInUTM" permission_type="flag" depend_permission_id="canUseBorderInUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="12"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseCMFUSystem" permission_type="flag" default_value="unset" interface_group_id="3ps_cumfu_general" display_order="1"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseCustomUNM" permission_type="flag" depend_permission_id="canUseCMFUSystem" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="0"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseCustomUTM" permission_type="flag" depend_permission_id="canUseCMFUSystem" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="1"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseFontInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="7"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseFontInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="8"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseItalicInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="2"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseItalicInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="3"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseOverlineInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="5"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseOverlineInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="6"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseStrikeInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="4"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseStrikeInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="5"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseTextColourInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="6"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseTextColourInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="7"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseUnderlineInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="3"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseUnderlineInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="4"/>
-    </permissions>
-    <interface_groups>
-      <interface_group interface_group_id="3ps_cumfu_general" display_order="1"/>
-      <interface_group interface_group_id="3ps_cumfu_user_title" display_order="1"/>
-      <interface_group interface_group_id="3ps_cumfu_username" display_order="1"/>
-    </interface_groups>
-  </permissions>
-  <phrases>
-    <phrase title="3ps_cmfu_apply_bold_effect_to_x" version_id="1" version_string="1.0.0"><![CDATA[Apply <span style="font-weight: bold;">bold</span> effect to {title}]]></phrase>
-    <phrase title="3ps_cmfu_apply_italic_effect_to_x" version_id="1" version_string="1.0.0"><![CDATA[Apply <i>italic</i> effect to {title}]]></phrase>
-    <phrase title="3ps_cmfu_background_colour" version_id="1" version_string="1.0.0"><![CDATA[Background colour]]></phrase>
-    <phrase title="3ps_cmfu_bold_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Bold option selection invalid.]]></phrase>
-    <phrase title="3ps_cmfu_border_colour" version_id="1" version_string="1.0.0"><![CDATA[Border Colour]]></phrase>
-    <phrase title="3ps_cmfu_border_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Border option selection invalid.]]></phrase>
-    <phrase title="3ps_cmfu_border_style" version_id="1" version_string="1.0.0"><![CDATA[Border Style]]></phrase>
-    <phrase title="3ps_cmfu_border_style_option_invalid" version_id="1" version_string="1.0.0"><![CDATA[Border style option invalid.]]></phrase>
-    <phrase title="3ps_cmfu_colour_code_invalid" version_id="1" version_string="1.0.0"><![CDATA[Colour code invalid.]]></phrase>
-    <phrase title="3ps_cmfu_custom_markup" version_id="1" version_string="1.0.0 Alpha 2"><![CDATA[Custom Markup]]></phrase>
-    <phrase title="3ps_cmfu_enable_x_background_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} background colour]]></phrase>
-    <phrase title="3ps_cmfu_enable_x_border" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border]]></phrase>
-    <phrase title="3ps_cmfu_enable_x_border_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border colour]]></phrase>
-    <phrase title="3ps_cmfu_enable_x_border_style" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border style]]></phrase>
-    <phrase title="3ps_cmfu_enable_x_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} colour]]></phrase>
-    <phrase title="3ps_cmfu_enable_x_font" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} font]]></phrase>
-    <phrase title="3ps_cmfu_italic_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Italic option selection invalid.]]></phrase>
-    <phrase title="3ps_cmfu_overline_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Overline option selection invalid.]]></phrase>
-    <phrase title="3ps_cmfu_overline_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: overline;">Overline</span> {title}]]></phrase>
-    <phrase title="3ps_cmfu_strike_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Strike option selection invalid.]]></phrase>
-    <phrase title="3ps_cmfu_strike_through_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: line-through;">Strike through</span> {title}]]></phrase>
-    <phrase title="3ps_cmfu_underline_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Underline option selection invalid.]]></phrase>
-    <phrase title="3ps_cmfu_underline_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: underline;">Underline</span> {title}]]></phrase>
-    <phrase title="3ps_cmfu_users_current_x_markup" version_id="1" version_string="1.0.0 Alpha 2"><![CDATA[User's current {title} markup]]></phrase>
-    <phrase title="3ps_cmfu_user_title" version_id="1" version_string="1.0.0"><![CDATA[User Title]]></phrase>
-    <phrase title="3ps_cmfu_x_background_and_borders" version_id="1" version_string="1.0.0"><![CDATA[Background And Borders]]></phrase>
-    <phrase title="3ps_cmfu_x_colour" version_id="1" version_string="1.0.0"><![CDATA[{title} colour]]></phrase>
-    <phrase title="3ps_cmfu_x_font" version_id="1" version_string="1.0.0"><![CDATA[{title} font]]></phrase>
-    <phrase title="3ps_cmfu_x_markup" version_id="1" version_string="1.0.0"><![CDATA[{title} Markup]]></phrase>
-    <phrase title="3ps_cmfu_x_text_effects" version_id="1" version_string="1.0.0"><![CDATA[{title} Font Effects]]></phrase>
-    <phrase title="3ps_cmfu_your_current_x_markup" version_id="1" version_string="1.0.0"><![CDATA[Your current {title} markup]]></phrase>
-    <phrase title="option_3ps_cmfu_overridePlainUsernameHelper" version_id="1" version_string="1.0.0"><![CDATA[Override Plain Username Helper]]></phrase>
-    <phrase title="option_3ps_cmfu_overridePlainUsernameHelper_explain" version_id="1" version_string="1.0.0"><![CDATA[Check this option to override the plain username helper as well. This will replace all plain usernames with rich usernames. This is not recommended as plain usernames are there for a reason.]]></phrase>
-    <phrase title="option_3ps_cmfu_usernameStylingPreference" version_id="1" version_string="1.0.0"><![CDATA[Username Styling Preference]]></phrase>
-    <phrase title="option_3ps_cmfu_usernameStylingPreference_explain" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
-    <phrase title="option_3ps_usergroup_ranks_max_items_per_row" version_id="1" version_string="1.0.0"><![CDATA[Maximum Rank Items Per Row]]></phrase>
-    <phrase title="option_3ps_usergroup_ranks_max_items_per_row_explain" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
-    <phrase title="option_group_3ps_cmfu" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Markup For Users]]></phrase>
-    <phrase title="option_group_3ps_cmfu_description" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseBGColourInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use background colour]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseBGColourInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use background colour]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseBoldInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use bold effect]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseBoldInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use bold effect]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseBorderColourInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use border colour]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseBorderColourInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use border colour]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseBorderInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use border]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseBorderInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use border]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseBorderStyleInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use border style]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseBorderStyleInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use border style]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseCMFUSystem" version_id="1" version_string="1.0.0"><![CDATA[Can use Custom Markup for User System]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseCustomUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use Custom Username Markup]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseCustomUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use Custom User Title Markup]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseFontInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use custom font]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseFontInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use custom font]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseItalicInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use italic effect]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseItalicInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use italic effect]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseOverlineInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use overline effect]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseOverlineInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use overline effect]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseStrikeInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use strike effect]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseStrikeInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use strike effect]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseTextColourInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use text colour]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseTextColourInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use text colour]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseUnderlineInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use underline]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseUnderlineInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use underline]]></phrase>
-    <phrase title="permission_group_3ps_cmfu" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Markup For Users Permissions]]></phrase>
-    <phrase title="permission_interface_3ps_cumfu_general" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - General Permissions]]></phrase>
-    <phrase title="permission_interface_3ps_cumfu_username" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - Username Markup Permissions]]></phrase>
-    <phrase title="permission_interface_3ps_cumfu_user_title" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - User Title Markup Permissions]]></phrase>
-  </phrases>
-  <route_prefixes/>
-  <style_properties/>
-  <templates>
-    <template title="3ps_cmfu.css" version_id="2" version_string="1.0.0 Beta 1"><![CDATA[.boldText {
-	font-weight: bold;
-}
+    var i;
+    var toggleClasses = ['bold', 'italic', 'underline', 'overline', 'strike', 'border'];
+    var colourPickerProperties = ['text_colour', 'background_colour', 'border_colour'];
 
-.italicText {
-	font-style: italic;
-}
+    <xen:comment>
+    for (i = 0; i < toggleClasses.length; ++i) {
+        $('#ctrl_3ps_cmfu_options_{$titleCode}_' + toggleClasses[i]).on('click', function () {
+            var $this = $(this);
+            if ($this.is(':checked')) {
+                currentMarkupInstance.addClass(toggleClasses[i] + "Text");
+            } else {
+                currentMarkupInstance.removeClass(toggleClasses[i] + "Text");
+            }
+            
+        });
+    }
 
-.underlineText {
-	text-decoration: underline;
-}
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour').on('click', function () {
+        var $this = $(this);
+        if ($this.is(':checked')) {
+            currentMarkupInstance.css("color", $('#ctrl_3ps_cmfu_options_{$titleCode}_text_colour').val());
+        } else {
+            currentMarkupInstance.css("color", "inherit");
+        }
+    });
 
-.overlineText {
-	text-decoration: overline;
-}
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_text_colour').on("input", function () {
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour').is("checked")) {
+            currentMarkupInstance.css("color", $(this).val());
+        } else {
+            currentMarkupInstance.css("color", "inherit");
+        }
+    });
 
-.strikeText {
-	text-decoration: line-through;
-}
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face').on('click', function () {
+        var $this = $(this);
+        if ($this.is(':checked')) {
+            currentMarkupInstance.css("font-family", $('#ctrl_3ps_cmfu_options_{$titleCode}_font_face').val());
+        } else {
+            currentMarkupInstance.css("font-family", "inherit");
+        }
+    });
 
-.borderText {
-	border-style: solid;
-	border-width: 1.7px;
-}]]></template>
-    <template title="3ps_cmfu_account_cmcontrol" version_id="2" version_string="1.0.0 Beta 1"><![CDATA[<xen:require css="3ps_cmfu_colorpicker.css" />
-<xen:require css="3ps_cmfu.css" />
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_font_face').on("change", function () {
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face').is("checked")) {
+            currentMarkupInstance.css("font-family", $(this).val());
+        } else {
+            currentMarkupInstance.css("font-family", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour').on('click', function () {
+        var $this = $(this);
+        if ($this.is(':checked')) {
+            currentMarkupInstance.css("background-color", $('#ctrl_3ps_cmfu_options_{$titleCode}_background_colour').val());
+        } else {
+            currentMarkupInstance.css("background-color", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_background_colour').on("input", function () {
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour').is("checked")) {
+            currentMarkupInstance.css("background-color", $(this).val());
+        } else {
+            currentMarkupInstance.css("background-color", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour').on('click', function () {
+        var $this = $(this);
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_border').is(':checked') && $this.is(':checked')) {
+            currentMarkupInstance.css("border-color", $('#ctrl_3ps_cmfu_options_{$titleCode}_border_colour').val());
+        } else {
+            currentMarkupInstance.css("border-color", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_border_colour').on("input", function () {
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_border').is(':checked') && $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour').is("checked")) {
+            currentMarkupInstance.css("border-color", $(this).val());
+        } else {
+            currentMarkupInstance.css("border-color", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style').on('click', function () {
+        var $this = $(this);
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_border').is(':checked') && $this.is(':checked')) {
+            currentMarkupInstance.css("border-style", $('#ctrl_3ps_cmfu_options_{$titleCode}_border_style').val());
+        } else {
+            currentMarkupInstance.css("border-style", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_border_style').on("change", function () {
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_border').is(':checked') && $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style').is("checked")) {
+            currentMarkupInstance.css("border-style", $(this).val());
+        } else {
+            currentMarkupInstance.css("border-style", "inherit");
+        }
+    });</xen:comment>
+
+    function makeColourPicker(name) {
+            $('#colorSelector_{$titleCode}_' + name).ColorPicker({
+            color: $('#ctrl_3ps_cmfu_options_{$titleCode}_' + name).val(),
+            onShow: function (colpkr) {
+                $(colpkr).fadeIn(500);
+                return false;
+            },
+            onHide: function (colpkr) {
+                $(colpkr).fadeOut(500);
+                return false;
+            },
+            onChange: function (hsb, hex, rgb) {
+            	console.log('hey');
+                $('#colorSelectorIndicator_{$titleCode}_' + name).css('backgroundColor', '#' + hex);
+                $('#ctrl_3ps_cmfu_options_{$titleCode}_' + name).val('#' + hex);
+            }
+        });
+    }
+
+    for (i = 0; i < colourPickerProperties.length; ++i) {
+	makeColourPicker(colourPickerProperties[i]);
+    }
+});
+</script>]]></template>
+    <template title="3ps_cmfu_cmcontrol"><![CDATA[<xen:require css="3ps_cmfu_colorpicker.css" />
 <xen:require js="js/3ps/cmfu/colorpicker.js" />
+<xen:include template="3ps_cmfu.js" />
+
 <h3 class="sectionHeader">{xen:phrase 3ps_cmfu_x_markup, 'title={$title}'}</h3>
 <dl class="ctrlUnit">
-    <dt>{xen:phrase 3ps_cmfu_your_current_x_markup, 'title={$title}'}</dt>
+    <dt>{xen:phrase 3ps_cmfu_users_current_x_markup, 'title={$title}'}</dt>
     <dd id="currentMarkup_{$titleCode}">{xen:raw $currentMarkupRender}</dd>
 </dl>
-<xen:if is="{$permissions._textEffects}">
 <dl class="ctrlUnit OptOut">
     <dt>{xen:phrase 3ps_cmfu_x_text_effects, 'title={$title}'}</dt>
     <dd>
         <ul>
-            <xen:if is="{$permissions.bold}">
             <li><label>
                 <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][bold]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_bold" {xen:checked $userOptions.bold} /> {xen:phrase 3ps_cmfu_apply_bold_effect_to_x, 'title={$title}'}
             </label></li>
-            </xen:if>
             
-            <xen:if is="{$permissions.italic}">
             <li><label>
                 <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][italic]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_italic" {xen:checked $userOptions.italic} /> {xen:phrase 3ps_cmfu_apply_italic_effect_to_x, 'title={$title}'}
             </label></li>
-            </xen:if>
             
-            <xen:if is="{$permissions.underline}">
             <li><label>
                 <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][underline]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_underline" {xen:checked $userOptions.underline} /> {xen:phrase 3ps_cmfu_underline_x, 'title={$title}'}
             </label></li>
-            </xen:if>
-            
-            <xen:if is="{$permissions.strike}">
+
             <li><label>
                 <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][strike]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_strike" {xen:checked $userOptions.strike} /> {xen:phrase 3ps_cmfu_strike_through_x, 'title={$title}'}
             </label></li>
-            </xen:if>
 
-            <xen:if is="{$permissions.overline}">
             <li><label>
                 <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][overline]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_overline" {xen:checked $userOptions.overline} /> {xen:phrase 3ps_cmfu_overline_x, 'title={$title}'}
             </label></li>
-            </xen:if>
 
-            <xen:if is="{$permissions.text_colour}">
             <li>
                 <label>
                     <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_text_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour" {xen:checked $userOptions.enable_text_colour} /> {xen:phrase 3ps_cmfu_enable_x_colour, 'title={$title}'}
@@ -279,35 +176,14 @@ value</sub_options>
                         <label>
                             <input type="hidden" name="3ps_cmfu_options[{$titleCode}][text_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_text_colour" value="{$userOptions.text_colour}" />
                             <div id="colorWidget_{$titleCode}_text_colour" class="colorWidget">
-                                <div id="colorSelector_{$titleCode}_text_colour" class="colorSelector"><div style="background-color: {$userOptions.text_colour}"></div></div>
+                                <div id="colorSelector_{$titleCode}_text_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_text_colour" style="background-color: {$userOptions.text_colour}"></div></div>
                                 <div id="colorPickerHolder_{$titleCode}_text_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
                             </div>
-                            <script type="text/javascript">
-                                $(function() {
-                                    $('#colorSelector_{$titleCode}_text_colour').ColorPicker({
-                                        color: $('#ctrl_3ps_cmfu_options_{$titleCode}_text_colour').val(),
-                                        onShow: function (colpkr) {
-                                            $(colpkr).fadeIn(500);
-                                            return false;
-                                        },
-                                        onHide: function (colpkr) {
-                                            $(colpkr).fadeOut(500);
-                                            return false;
-                                        },
-                                        onChange: function (hsb, hex, rgb) {
-                                            $('#colorSelector_{$titleCode}_text_colour div').css('backgroundColor', '#' + hex);
-                                            $('#ctrl_3ps_cmfu_options_{$titleCode}_text_colour').val('#' + hex)
-                                        }
-                                    });
-                                });
-                            </script>
                         </label>
                     </li>
                 </ul>
             </li>
-            </xen:if>
 
-            <xen:if is="{$permissions.font_face}">
             <li>
                 <label>
                     <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_font_face]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face" {xen:checked $userOptions.enable_font_face} /> {xen:phrase 3ps_cmfu_enable_x_font, 'title={$title}'}
@@ -325,132 +201,83 @@ value</sub_options>
                     </li>
                 </ul>
             </li>
-            </xen:if>
         </ul>
     </dd>
 </dl>
-</xen:if>
 
-<xen:if is="{$permissions._bgBorders}">
-    <dl class="ctrlUnit OptOut">
-        <dt>{xen:phrase 3ps_cmfu_x_background_and_borders, 'title={$title}'}</dt>
-        <dd>
-            <ul>
-                <xen:if is="{$permissions.background_colour}">
+<dl class="ctrlUnit OptOut">
+    <dt>{xen:phrase 3ps_cmfu_x_background_and_borders, 'title={$title}'}</dt>
+    <dd>
+        <ul>
+            <li>
+                <label>
+                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_background_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour" {xen:checked $userOptions.enable_background_colour} /> {xen:phrase 3ps_cmfu_enable_x_background_colour, 'title={$title}'}
+                </label>
+                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour_Disabler">
                     <li>
                         <label>
-                            <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_background_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour" {xen:checked $userOptions.enable_background_colour} /> {xen:phrase 3ps_cmfu_enable_x_background_colour, 'title={$title}'}
+                            <input type="hidden" name="3ps_cmfu_options[{$titleCode}][background_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_background_colour" value="{$userOptions.background_colour}" />
+                            <div id="colorWidget_{$titleCode}_background_colour" class="colorWidget">
+                                <div id="colorSelector_{$titleCode}_background_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_background_colour" style="background-color: {$userOptions.background_colour}"></div></div>
+                                <div id="colorPickerHolder_{$titleCode}_background_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
+                            </div>
                         </label>
-                        <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour_Disabler">
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <label>
+                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][border]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_border" {xen:checked $userOptions.border} /> {xen:phrase 3ps_cmfu_enable_x_border, 'title={$title}'}
+                </label>
+                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_border_Disabler">
+                    <li>
+                        <label>
+                            <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_border_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour" {xen:checked $userOptions.enable_border_colour} /> {xen:phrase 3ps_cmfu_enable_x_border_colour, 'title={$title}'}
+                        </label>
+                        <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour_Disabler">
                             <li>
                                 <label>
-                                    <input type="hidden" name="3ps_cmfu_options[{$titleCode}][background_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_background_colour" value="{$userOptions.background_colour}" />
-                                    <div id="colorWidget_{$titleCode}_background_colour" class="colorWidget">
-                                        <div id="colorSelector_{$titleCode}_background_colour" class="colorSelector"><div style="background-color: {$userOptions.background_colour}"></div></div>
-                                        <div id="colorPickerHolder_{$titleCode}_background_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
+                                    <input type="hidden" name="3ps_cmfu_options[{$titleCode}][border_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_border_colour" value="{$userOptions.border_colour}" />
+                                    <div id="colorWidget_{$titleCode}_border_colour" class="colorWidget">
+                                        <div id="colorSelector_{$titleCode}_border_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_border_colour" style="background-color: {$userOptions.border_colour}"></div></div>
+                                        <div id="colorPickerHolder_{$titleCode}_border_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
                                     </div>
-                                    <script type="text/javascript">
-                                        $(function() {
-                                            $('#colorSelector_{$titleCode}_background_colour').ColorPicker({
-                                                color: $('#ctrl_3ps_cmfu_options_{$titleCode}_background_colour').val(),
-                                                onShow: function (colpkr) {
-                                                    $(colpkr).fadeIn(500);
-                                                    return false;
-                                                },
-                                                onHide: function (colpkr) {
-                                                    $(colpkr).fadeOut(500);
-                                                    return false;
-                                                },
-                                                onChange: function (hsb, hex, rgb) {
-                                                    $('#colorSelector_{$titleCode}_background_colour div').css('backgroundColor', '#' + hex);
-                                                    $('#ctrl_3ps_cmfu_options_{$titleCode}_background_colour').val('#' + hex)
-                                                }
-                                            });
-                                        });
-                                    </script>
                                 </label>
                             </li>
                         </ul>
                     </li>
-                </xen:if>
-                
-                <xen:if is="{$permissions.border}">
-                <li>
-                    <label>
-                        <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][border]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_border" {xen:checked $userOptions.border} /> {xen:phrase 3ps_cmfu_enable_x_border, 'title={$title}'}
-                    </label>
-                    <ul id="ctrl_3ps_cmfu_options_{$titleCode}_border_Disabler">
-                        <xen:if is="{$permissions.border_colour}">
-                        <li>
-                            <label>
-                                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_border_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour" {xen:checked $userOptions.enable_border_colour} /> {xen:phrase 3ps_cmfu_enable_x_border_colour, 'title={$title}'}
-                            </label>
-                            <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour_Disabler">
-                                <li>
-                                    <label>
-                                        <input type="hidden" name="3ps_cmfu_options[{$titleCode}][border_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_border_colour" value="{$userOptions.border_colour}" />
-                                        <div id="colorWidget_{$titleCode}_border_colour" class="colorWidget">
-                                            <div id="colorSelector_{$titleCode}_border_colour" class="colorSelector"><div style="background-color: {$userOptions.border_colour}"></div></div>
-                                            <div id="colorPickerHolder_{$titleCode}_border_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
-                                        </div>
-                                        <script type="text/javascript">
-                                        $(function() {
-                                            $('#colorSelector_{$titleCode}_border_colour').ColorPicker({
-                                                color: $('#ctrl_3ps_cmfu_options_{$titleCode}_border_colour').val(),
-                                                onShow: function (colpkr) {
-                                                    $(colpkr).fadeIn(500);
-                                                    return false;
-                                                },
-                                                onHide: function (colpkr) {
-                                                    $(colpkr).fadeOut(500);
-                                                    return false;
-                                                },
-                                                onChange: function (hsb, hex, rgb) {
-                                                    $('#colorSelector_{$titleCode}_border_colour div').css('backgroundColor', '#' + hex);
-                                                    $('#ctrl_3ps_cmfu_options_{$titleCode}_border_colour').val('#' + hex)
-                                                }
-                                            });
-                                        });
-                                        </script>
-                                    </label>
-                                </li>
-                            </ul>
-                        </li>
-                        </xen:if>
 
-                        <xen:if is="{$permissions.border_style}">
-                        <li>
-                            <label>
-                                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_border_style]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style" {xen:checked $userOptions.enable_border_style} /> {xen:phrase 3ps_cmfu_enable_x_border_style, 'title={$title}'}
-                            </label>
-                            <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style_Disabler">
-                                <li>
-                                    <label>
-                                        {xen:phrase 3ps_cmfu_border_style}: 
-                                        <select name="3ps_cmfu_options[{$titleCode}][border_style]" class="textCtrl autoSize">
-                                            <xen:foreach loop="$borderList" key="$borderId" value="$border">
-                                                <option value="{$borderId}" {xen:selected '{$borderId} == {$userOptions.border_style}'}>{$border}</option>
-                                            </xen:foreach>
-                                        </select>
-                                    </label>
-                                </li>
-                            </ul>
-                        </li>
-                        </xen:if>
-                    </ul>
-                </li>
-                </xen:if>
-            </ul>
-        </dd>
-    </dl>
-</xen:if>]]></template>
-    <template title="3ps_cmfu_colorpicker.css" version_id="2" version_string="1.0.0 Beta 1"><![CDATA[.colorpicker {
+                    <li>
+                        <label>
+                            <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_border_style]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style" {xen:checked $userOptions.enable_border_style} /> {xen:phrase 3ps_cmfu_enable_x_border_style, 'title={$title}'}
+                        </label>
+                        <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style_Disabler">
+                            <li>
+                                <label>
+                                    {xen:phrase 3ps_cmfu_border_style}: 
+                                    <select name="3ps_cmfu_options[{$titleCode}][border_style]" class="textCtrl autoSize">
+                                        <xen:foreach loop="$borderList" key="$borderId" value="$border">
+                                            <option value="{$borderId}" {xen:selected '{$borderId} == {$userOptions.border_style}'}>{$border}</option>
+                                        </xen:foreach>
+                                    </select>
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </dd>
+</dl>]]></template>
+    <template title="3ps_cmfu_colorpicker.css"><![CDATA[.colorpicker {
 	width: 356px;
 	height: 176px;
 	overflow: hidden;
 	position: absolute;
 	background: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_background.png');
 	display: none;
+	z-index: 99999;
 }
 .colorpicker_color {
 	width: 150px;
@@ -672,37 +499,722 @@ value</sub_options>
 	position: relative;
 	height: 36px;
 }]]></template>
-    <template title="3ps_cmfu_footer_js" version_id="2" version_string="1.0.0 Beta 1"><![CDATA[$('#colorSelector_username').ColorPicker({
-	color: $('ctrl_3ps_cmfu_options_username_text_colour').val(),
-	onShow: function (colpkr) {
-		$(colpkr).fadeIn(500);
-		return false;
-	},
-	onHide: function (colpkr) {
-		$(colpkr).fadeOut(500);
-		return false;
-	},
-	onChange: function (hsb, hex, rgb) {
-		$('#colorSelector_username div').css('backgroundColor', '#' + hex);
-		$('#ctrl_3ps_cmfu_options_username_text_colour').val('#' + hex)
-	}
-});
+    <template title="3ps_cmfu_user_edit_tab"><![CDATA[<li id="tab3psCMFU"><a>{xen:phrase 3ps_cmfu_custom_markup}</a></li>]]></template>
+  </admin_templates>
+  <admin_template_modifications>
+    <modification template="tools_rebuild" modification_key="3ps_cmfu_tools_rebuild" description="Cache rebuilding" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:form action="{xen:adminlink 'tools/clean-up-permissions'}">
+	<h2 class="subHeading">{xen:phrase clean_up_permissions}</h2>
+	<p class="section">{xen:phrase this_will_clean_up_permission_combinations_no_longer_in_use}</p>
 
-$('#colorSelector_usertitle').ColorPicker({
-	color: '{$userOptions.text_colour}',
-	onShow: function (colpkr) {
-		$(colpkr).fadeIn(500);
-		return false;
-	},
-	onHide: function (colpkr) {
-		$(colpkr).fadeOut(500);
-		return false;
-	},
-	onChange: function (hsb, hex, rgb) {
-		$('#colorSelector div').css('backgroundColor', '#' + hex);
-		$('#ctrl_3ps_cmfu_options_{$titleCode}_text_colour').val('#' + hex)
-	}
-});]]></template>
+	<xen:submitunit save="{xen:phrase run}" />
+</xen:form>]]></find>
+      <replace><![CDATA[<xen:form action="{xen:adminlink 'tools/clean-up-permissions'}">
+	<h2 class="subHeading">{xen:phrase clean_up_permissions}</h2>
+	<p class="section">{xen:phrase this_will_clean_up_permission_combinations_no_longer_in_use}</p>
+
+	<xen:submitunit save="{xen:phrase run}" />
+</xen:form>
+
+<xen:form action="{xen:adminlink 'tools/trigger-deferred'}">
+	<h2 class="subHeading">{xen:phrase 3ps_cmfu_rebuild_user_markup_cache}</h2>
+	<xen:spinboxunit name="options[batch]" value="150" step="10" min="1" label="{xen:phrase items_to_process_per_page}:" />
+	
+	<xen:submitunit save="{xen:phrase rebuild_now}" />
+	<input type="hidden" name="cache" value="ThreePointStudio_CustomMarkupForUser_Deferred_UserMarkup" />
+</xen:form>]]></replace>
+    </modification>
+  </admin_template_modifications>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Init" callback_method="initDependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassController" active="1" hint="XenForo_ControllerAdmin_User" description="XenForo_ControllerAdmin_User"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassDataWriter" active="1" hint="XenForo_DataWriter_User" description="XenForo_DataWriter_User"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassController" active="1" hint="XenForo_ControllerPublic_Account" description="XenForo_ControllerPublic_Account"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassModel" active="1" hint="XenForo_Model_User" description="XenForo_Model_User"/>
+    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="templateHook" active="1" hint="account_preferences_options" description="account_preferences_options"/>
+    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="templateHook" active="1" hint="admin_user_edit_tabs" description="admin_user_edit_tabs"/>
+    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="templateHook" active="1" hint="admin_user_edit_panes" description="admin_user_edit_panes"/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups>
+    <group group_id="3ps_cmfu" display_order="1" debug_only="0"/>
+    <option option_id="3ps_cmfu_displayCreditNotice" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="3ps_cmfu" display_order="4"/>
+    </option>
+    <option option_id="3ps_cmfu_overridePlainUsernameHelper" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="3ps_cmfu" display_order="1"/>
+    </option>
+    <option option_id="3ps_cmfu_usernameStylingPreference" edit_format="radio" data_type="unsigned_integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params>0=User Group styling CSS first
+1=Custom Username Markup first
+2=Completely ignore User Group styling CSS</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="3ps_cmfu" display_order="3"/>
+    </option>
+    <option option_id="3ps_cufm_useCache" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="3ps_cmfu" display_order="2"/>
+    </option>
+    <option option_id="3ps_usergroup_ranks_max_items_per_row" edit_format="template" data_type="array" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params>3ps_usergroup_ranks_max_items_per_row_option</edit_format_params>
+      <sub_options>style
+value</sub_options>
+      <relation group_id="3ps_usergroup_ranks" display_order="100"/>
+    </option>
+  </optiongroups>
+  <permissions>
+    <permission_groups>
+      <permission_group permission_group_id="3ps_cmfu"/>
+    </permission_groups>
+    <permissions>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBGColourInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="8"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBGColourInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="9"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBoldInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="1"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBoldInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="2"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderColourInUNM" permission_type="flag" depend_permission_id="canUseBorderInUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="10"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderColourInUTM" permission_type="flag" depend_permission_id="canUseBorderInUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="11"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="9"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="10"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderStyleInUNM" permission_type="flag" depend_permission_id="canUseBorderInUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="12"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderStyleInUTM" permission_type="flag" depend_permission_id="canUseBorderInUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="12"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseCMFUSystem" permission_type="flag" default_value="unset" interface_group_id="3ps_cumfu_general" display_order="1"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseCustomUNM" permission_type="flag" depend_permission_id="canUseCMFUSystem" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="0"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseCustomUTM" permission_type="flag" depend_permission_id="canUseCMFUSystem" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="1"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseFontInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="7"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseFontInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="8"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseItalicInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="2"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseItalicInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="3"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseOverlineInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="5"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseOverlineInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="6"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseStrikeInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="4"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseStrikeInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="5"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseTextColourInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="6"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseTextColourInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="7"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseUnderlineInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="3"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseUnderlineInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="4"/>
+    </permissions>
+    <interface_groups>
+      <interface_group interface_group_id="3ps_cumfu_general" display_order="1"/>
+      <interface_group interface_group_id="3ps_cumfu_user_title" display_order="1"/>
+      <interface_group interface_group_id="3ps_cumfu_username" display_order="1"/>
+    </interface_groups>
+  </permissions>
+  <phrases>
+    <phrase title="3ps_cmfu_apply_bold_effect_to_x" version_id="1" version_string="1.0.0"><![CDATA[Apply <span style="font-weight: bold;">bold</span> effect to {title}]]></phrase>
+    <phrase title="3ps_cmfu_apply_italic_effect_to_x" version_id="1" version_string="1.0.0"><![CDATA[Apply <i>italic</i> effect to {title}]]></phrase>
+    <phrase title="3ps_cmfu_background_colour" version_id="1" version_string="1.0.0"><![CDATA[Background colour]]></phrase>
+    <phrase title="3ps_cmfu_bold_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Bold option selection invalid.]]></phrase>
+    <phrase title="3ps_cmfu_border_colour" version_id="1" version_string="1.0.0"><![CDATA[Border Colour]]></phrase>
+    <phrase title="3ps_cmfu_border_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Border option selection invalid.]]></phrase>
+    <phrase title="3ps_cmfu_border_style" version_id="1" version_string="1.0.0"><![CDATA[Border Style]]></phrase>
+    <phrase title="3ps_cmfu_border_style_option_invalid" version_id="1" version_string="1.0.0"><![CDATA[Border style option invalid.]]></phrase>
+    <phrase title="3ps_cmfu_colour_code_invalid" version_id="1" version_string="1.0.0"><![CDATA[Colour code invalid.]]></phrase>
+    <phrase title="3ps_cmfu_custom_markup" version_id="1" version_string="1.0.0 Alpha 2"><![CDATA[Custom Markup]]></phrase>
+    <phrase title="3ps_cmfu_enable_x_background_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} background colour]]></phrase>
+    <phrase title="3ps_cmfu_enable_x_border" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border]]></phrase>
+    <phrase title="3ps_cmfu_enable_x_border_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border colour]]></phrase>
+    <phrase title="3ps_cmfu_enable_x_border_style" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border style]]></phrase>
+    <phrase title="3ps_cmfu_enable_x_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} colour]]></phrase>
+    <phrase title="3ps_cmfu_enable_x_font" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} font]]></phrase>
+    <phrase title="3ps_cmfu_italic_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Italic option selection invalid.]]></phrase>
+    <phrase title="3ps_cmfu_overline_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Overline option selection invalid.]]></phrase>
+    <phrase title="3ps_cmfu_overline_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: overline;">Overline</span> {title}]]></phrase>
+    <phrase title="3ps_cmfu_strike_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Strike option selection invalid.]]></phrase>
+    <phrase title="3ps_cmfu_strike_through_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: line-through;">Strike through</span> {title}]]></phrase>
+    <phrase title="3ps_cmfu_text_color" version_id="3" version_string="1.0.0"><![CDATA[Text colour]]></phrase>
+    <phrase title="3ps_cmfu_underline_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Underline option selection invalid.]]></phrase>
+    <phrase title="3ps_cmfu_underline_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: underline;">Underline</span> {title}]]></phrase>
+    <phrase title="3ps_cmfu_users_current_x_markup" version_id="1" version_string="1.0.0 Alpha 2"><![CDATA[User's current {title} markup]]></phrase>
+    <phrase title="3ps_cmfu_user_title" version_id="1" version_string="1.0.0"><![CDATA[User Title]]></phrase>
+    <phrase title="3ps_cmfu_x_background_and_borders" version_id="1" version_string="1.0.0"><![CDATA[Background And Borders]]></phrase>
+    <phrase title="3ps_cmfu_x_colour" version_id="1" version_string="1.0.0"><![CDATA[{title} colour]]></phrase>
+    <phrase title="3ps_cmfu_x_font" version_id="1" version_string="1.0.0"><![CDATA[{title} font]]></phrase>
+    <phrase title="3ps_cmfu_x_markup" version_id="1" version_string="1.0.0"><![CDATA[{title} Markup]]></phrase>
+    <phrase title="3ps_cmfu_x_text_effects" version_id="1" version_string="1.0.0"><![CDATA[{title} Font Effects]]></phrase>
+    <phrase title="3ps_cmfu_your_current_x_markup" version_id="1" version_string="1.0.0"><![CDATA[Your current {title} markup]]></phrase>
+    <phrase title="option_3ps_cmfu_displayCreditNotice" version_id="3" version_string="1.0.0"><![CDATA[Display credit notice in footer]]></phrase>
+    <phrase title="option_3ps_cmfu_displayCreditNotice_explain" version_id="3" version_string="1.0.0"><![CDATA[Whether to display an one-line credit notice on your forum's footer, under the standard XenForo copyright notice.<br />
+Please support me by always keeping this box checked. This notice will not display the add-on version. It is fine if you uncheck this option.<br /><br />
+<span style="font-size:12px; color: #333; font-weight: bold;">This add-on is released under the BSD 2-Clause modified License.</span> While this option can be turned off, you may <span style="font-size:12px; color: #333; font-weight: bold;">NOT</span> remove the footer comment (invisible, separate from the credit notice) <span style="font-size:12px; color: #333; font-weight: bold;">UNDER ANY CIRCUMSTANCES</span> except with explicit written permission. Not obeying this instruction will be considered as violation of the software license and legal action will be taken.]]></phrase>
+    <phrase title="option_3ps_cmfu_overridePlainUsernameHelper" version_id="1" version_string="1.0.0"><![CDATA[Override Plain Username Helper]]></phrase>
+    <phrase title="option_3ps_cmfu_overridePlainUsernameHelper_explain" version_id="1" version_string="1.0.0"><![CDATA[Check this option to override the plain username helper as well. This will replace all plain usernames with rich usernames. This is not recommended as plain usernames are there for a reason.]]></phrase>
+    <phrase title="option_3ps_cmfu_usernameStylingPreference" version_id="1" version_string="1.0.0"><![CDATA[Username Styling Preference]]></phrase>
+    <phrase title="option_3ps_cmfu_usernameStylingPreference_explain" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
+    <phrase title="option_3ps_cufm_useCache" version_id="3" version_string="1.0.0"><![CDATA[Use Cache]]></phrase>
+    <phrase title="option_3ps_cufm_useCache_explain" version_id="3" version_string="1.0.0"><![CDATA[Turn on this option to pre-build user markup. Recommended for performance reasons.]]></phrase>
+    <phrase title="option_3ps_usergroup_ranks_max_items_per_row" version_id="1" version_string="1.0.0"><![CDATA[Maximum Rank Items Per Row]]></phrase>
+    <phrase title="option_3ps_usergroup_ranks_max_items_per_row_explain" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
+    <phrase title="option_group_3ps_cmfu" version_id="3" version_string="1.0.0"><![CDATA[[3.studIo] Custom Markup For Users Options]]></phrase>
+    <phrase title="option_group_3ps_cmfu_description" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseBGColourInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use background colour]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseBGColourInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use background colour]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseBoldInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use bold effect]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseBoldInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use bold effect]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseBorderColourInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use border colour]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseBorderColourInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use border colour]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseBorderInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use border]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseBorderInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use border]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseBorderStyleInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use border style]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseBorderStyleInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use border style]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseCMFUSystem" version_id="1" version_string="1.0.0"><![CDATA[Can use Custom Markup for User System]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseCustomUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use Custom Username Markup]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseCustomUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use Custom User Title Markup]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseFontInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use custom font]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseFontInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use custom font]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseItalicInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use italic effect]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseItalicInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use italic effect]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseOverlineInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use overline effect]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseOverlineInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use overline effect]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseStrikeInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use strike effect]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseStrikeInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use strike effect]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseTextColourInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use text colour]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseTextColourInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use text colour]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseUnderlineInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use underline]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseUnderlineInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use underline]]></phrase>
+    <phrase title="permission_group_3ps_cmfu" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Markup For Users Permissions]]></phrase>
+    <phrase title="permission_interface_3ps_cumfu_general" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - General Permissions]]></phrase>
+    <phrase title="permission_interface_3ps_cumfu_username" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - Username Markup Permissions]]></phrase>
+    <phrase title="permission_interface_3ps_cumfu_user_title" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - User Title Markup Permissions]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates>
+    <template title="3ps_cmfu.js" version_id="3" version_string="1.0.0"><![CDATA[<script type="text/javascript">
+$(function () {
+    var currentMarkupInstance = $('#currentMarkup_{$titleCode}');
+
+    var i;
+    var toggleClasses = ['bold', 'italic', 'underline', 'overline', 'strike', 'border'];
+    var colourPickerProperties = ['text_colour', 'background_colour', 'border_colour'];
+
+    <xen:comment>
+    for (i = 0; i < toggleClasses.length; ++i) {
+        $('#ctrl_3ps_cmfu_options_{$titleCode}_' + toggleClasses[i]).on('click', function () {
+            var $this = $(this);
+            if ($this.is(':checked')) {
+                currentMarkupInstance.addClass(toggleClasses[i] + "Text");
+            } else {
+                currentMarkupInstance.removeClass(toggleClasses[i] + "Text");
+            }
+            console.log($this);
+            
+        });
+    }
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour').on('click', function () {
+        var $this = $(this);
+        if ($this.is(':checked')) {
+            currentMarkupInstance.css("color", $('#ctrl_3ps_cmfu_options_{$titleCode}_text_colour').val());
+        } else {
+            currentMarkupInstance.css("color", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_text_colour').on("input", function () {
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour').is("checked")) {
+            currentMarkupInstance.css("color", $(this).val());
+        } else {
+            currentMarkupInstance.css("color", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face').on('click', function () {
+        var $this = $(this);
+        if ($this.is(':checked')) {
+            currentMarkupInstance.css("font-family", $('#ctrl_3ps_cmfu_options_{$titleCode}_font_face').val());
+        } else {
+            currentMarkupInstance.css("font-family", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_font_face').on("change", function () {
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face').is("checked")) {
+            currentMarkupInstance.css("font-family", $(this).val());
+        } else {
+            currentMarkupInstance.css("font-family", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour').on('click', function () {
+        var $this = $(this);
+        if ($this.is(':checked')) {
+            currentMarkupInstance.css("background-color", $('#ctrl_3ps_cmfu_options_{$titleCode}_background_colour').val());
+        } else {
+            currentMarkupInstance.css("background-color", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_background_colour').on("input", function () {
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour').is("checked")) {
+            currentMarkupInstance.css("background-color", $(this).val());
+        } else {
+            currentMarkupInstance.css("background-color", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour').on('click', function () {
+        var $this = $(this);
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_border').is(':checked') && $this.is(':checked')) {
+            currentMarkupInstance.css("border-color", $('#ctrl_3ps_cmfu_options_{$titleCode}_border_colour').val());
+        } else {
+            currentMarkupInstance.css("border-color", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_border_colour').on("input", function () {
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_border').is(':checked') && $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour').is("checked")) {
+            currentMarkupInstance.css("border-color", $(this).val());
+        } else {
+            currentMarkupInstance.css("border-color", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style').on('click', function () {
+        var $this = $(this);
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_border').is(':checked') && $this.is(':checked')) {
+            currentMarkupInstance.css("border-style", $('#ctrl_3ps_cmfu_options_{$titleCode}_border_style').val());
+        } else {
+            currentMarkupInstance.css("border-style", "inherit");
+        }
+    });
+
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_border_style').on("change", function () {
+        if ($('#ctrl_3ps_cmfu_options_{$titleCode}_border').is(':checked') && $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style').is("checked")) {
+            currentMarkupInstance.css("border-style", $(this).val());
+        } else {
+            currentMarkupInstance.css("border-style", "inherit");
+        }
+    });</xen:comment>
+
+    function makeColourPicker(name) {
+            $('#colorSelector_{$titleCode}_' + name).ColorPicker({
+            color: $('#ctrl_3ps_cmfu_options_{$titleCode}_' + name).val(),
+            onShow: function (colpkr) {
+                $(colpkr).fadeIn(500);
+                return false;
+            },
+            onHide: function (colpkr) {
+                $(colpkr).fadeOut(500);
+                return false;
+            },
+            onChange: function (hsb, hex, rgb) {
+            	console.log('hey');
+                $('#colorSelectorIndicator_{$titleCode}_' + name).css('backgroundColor', '#' + hex);
+                $('#ctrl_3ps_cmfu_options_{$titleCode}_' + name).val('#' + hex);
+            }
+        });
+    }
+
+    for (i = 0; i < colourPickerProperties.length; ++i) {
+	makeColourPicker(colourPickerProperties[i]);
+    }
+});
+</script>]]></template>
+    <template title="3ps_cmfu_account_cmcontrol" version_id="3" version_string="1.0.0"><![CDATA[<xen:require css="3ps_cmfu_colorpicker.css" />
+<xen:require css="3ps_cmfu.css" />
+<xen:require js="js/3ps/cmfu/colorpicker.js" />
+
+<h3 class="sectionHeader">{xen:phrase 3ps_cmfu_x_markup, 'title={$title}'}</h3>
+<dl class="ctrlUnit">
+    <dt>{xen:phrase 3ps_cmfu_your_current_x_markup, 'title={$title}'}</dt>
+    <dd id="currentMarkup_{$titleCode}">{xen:raw $currentMarkupRender}</dd>
+</dl>
+<xen:if is="{$permissions._textEffects}">
+<dl class="ctrlUnit OptOut">
+    <dt>{xen:phrase 3ps_cmfu_x_text_effects, 'title={$title}'}</dt>
+    <dd>
+        <ul>
+            <xen:if is="{$permissions.bold}">
+            <li><label>
+                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][bold]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_bold" {xen:checked $userOptions.bold} /> {xen:phrase 3ps_cmfu_apply_bold_effect_to_x, 'title={$title}'}
+            </label></li>
+            </xen:if>
+            
+            <xen:if is="{$permissions.italic}">
+            <li><label>
+                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][italic]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_italic" {xen:checked $userOptions.italic} /> {xen:phrase 3ps_cmfu_apply_italic_effect_to_x, 'title={$title}'}
+            </label></li>
+            </xen:if>
+            
+            <xen:if is="{$permissions.underline}">
+            <li><label>
+                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][underline]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_underline" {xen:checked $userOptions.underline} /> {xen:phrase 3ps_cmfu_underline_x, 'title={$title}'}
+            </label></li>
+            </xen:if>
+            
+            <xen:if is="{$permissions.strike}">
+            <li><label>
+                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][strike]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_strike" {xen:checked $userOptions.strike} /> {xen:phrase 3ps_cmfu_strike_through_x, 'title={$title}'}
+            </label></li>
+            </xen:if>
+
+            <xen:if is="{$permissions.overline}">
+            <li><label>
+                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][overline]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_overline" {xen:checked $userOptions.overline} /> {xen:phrase 3ps_cmfu_overline_x, 'title={$title}'}
+            </label></li>
+            </xen:if>
+
+            <xen:if is="{$permissions.text_colour}">
+            <li>
+                <label>
+                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_text_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour" {xen:checked $userOptions.enable_text_colour} /> {xen:phrase 3ps_cmfu_enable_x_colour, 'title={$title}'}
+                </label>
+                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour_Disabler">
+                    <li>
+                        <label>
+                            <input type="hidden" name="3ps_cmfu_options[{$titleCode}][text_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_text_colour" value="{$userOptions.text_colour}" />
+                            <div id="colorWidget_{$titleCode}_text_colour" class="colorWidget">
+                                <div id="colorSelector_{$titleCode}_text_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_text_colour" style="background-color: {$userOptions.text_colour}"></div></div>
+                                <div id="colorPickerHolder_{$titleCode}_text_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            </xen:if>
+
+            <xen:if is="{$permissions.font_face}">
+            <li>
+                <label>
+                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_font_face]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face" {xen:checked $userOptions.enable_font_face} /> {xen:phrase 3ps_cmfu_enable_x_font, 'title={$title}'}
+                </label>
+                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face_Disabler">
+                    <li>
+                        <label>
+                            {xen:phrase 3ps_cmfu_x_font, 'title={$title}'}: 
+                            <select name="3ps_cmfu_options[{$titleCode}][font_face]" class="textCtrl autoSize">
+                                <xen:foreach loop="$fontList" key="$fontId" value="$fontValue">
+                                    <option style="font-family: {xen:raw $fontValue.fullname}" value="{$fontId}" {xen:selected '{$fontId} == {$userOptions.font_face}'}>{$fontValue.name}</option>
+                                </xen:foreach>
+                            </select>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            </xen:if>
+        </ul>
+    </dd>
+</dl>
+</xen:if>
+
+<xen:if is="{$permissions._bgBorders}">
+    <dl class="ctrlUnit OptOut">
+        <dt>{xen:phrase 3ps_cmfu_x_background_and_borders, 'title={$title}'}</dt>
+        <dd>
+            <ul>
+                <xen:if is="{$permissions.background_colour}">
+                    <li>
+                        <label>
+                            <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_background_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour" {xen:checked $userOptions.enable_background_colour} /> {xen:phrase 3ps_cmfu_enable_x_background_colour, 'title={$title}'}
+                        </label>
+                        <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour_Disabler">
+                            <li>
+                                <label>
+                                    <input type="hidden" name="3ps_cmfu_options[{$titleCode}][background_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_background_colour" value="{$userOptions.background_colour}" />
+                                    <div id="colorWidget_{$titleCode}_background_colour" class="colorWidget">
+                                        <div id="colorSelector_{$titleCode}_background_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_background_colour" style="background-color: {$userOptions.background_colour}"></div></div>
+                                        <div id="colorPickerHolder_{$titleCode}_background_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
+                                    </div>
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                </xen:if>
+                
+                <xen:if is="{$permissions.border}">
+                <li>
+                    <label>
+                        <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][border]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_border" {xen:checked $userOptions.border} /> {xen:phrase 3ps_cmfu_enable_x_border, 'title={$title}'}
+                    </label>
+                    <ul id="ctrl_3ps_cmfu_options_{$titleCode}_border_Disabler">
+                        <xen:if is="{$permissions.border_colour}">
+                        <li>
+                            <label>
+                                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_border_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour" {xen:checked $userOptions.enable_border_colour} /> {xen:phrase 3ps_cmfu_enable_x_border_colour, 'title={$title}'}
+                            </label>
+                            <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour_Disabler">
+                                <li>
+                                    <label>
+                                        <input type="hidden" name="3ps_cmfu_options[{$titleCode}][border_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_border_colour" value="{$userOptions.border_colour}" />
+                                        <div id="colorWidget_{$titleCode}_border_colour" class="colorWidget">
+                                            <div id="colorSelector_{$titleCode}_border_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_border_colour" style="background-color: {$userOptions.border_colour}"></div></div>
+                                            <div id="colorPickerHolder_{$titleCode}_border_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
+                                        </div>
+                                    </label>
+                                </li>
+                            </ul>
+                        </li>
+                        </xen:if>
+
+                        <xen:if is="{$permissions.border_style}">
+                        <li>
+                            <label>
+                                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_border_style]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style" {xen:checked $userOptions.enable_border_style} /> {xen:phrase 3ps_cmfu_enable_x_border_style, 'title={$title}'}
+                            </label>
+                            <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style_Disabler">
+                                <li>
+                                    <label>
+                                        {xen:phrase 3ps_cmfu_border_style}: 
+                                        <select name="3ps_cmfu_options[{$titleCode}][border_style]" class="textCtrl autoSize">
+                                            <xen:foreach loop="$borderList" key="$borderId" value="$border">
+                                                <option value="{$borderId}" {xen:selected '{$borderId} == {$userOptions.border_style}'}>{$border}</option>
+                                            </xen:foreach>
+                                        </select>
+                                    </label>
+                                </li>
+                            </ul>
+                        </li>
+                        </xen:if>
+                    </ul>
+                </li>
+                </xen:if>
+            </ul>
+        </dd>
+    </dl>
+</xen:if>
+<xen:include template="3ps_cmfu.js" />]]></template>
+    <template title="3ps_cmfu_colorpicker.css" version_id="3" version_string="1.0.0"><![CDATA[.colorpicker {
+	width: 356px;
+	height: 176px;
+	overflow: hidden;
+	position: absolute;
+	background: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_background.png');
+	display: none;
+	z-index: 99999;
+}
+.colorpicker_color {
+	width: 150px;
+	height: 150px;
+	left: 14px;
+	top: 13px;
+	position: absolute;
+	background: #f00;
+	overflow: hidden;
+	cursor: crosshair;
+}
+.colorpicker_color div {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 150px;
+	height: 150px;
+	background: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_overlay.png');
+}
+.colorpicker_color div div {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 11px;
+	height: 11px;
+	overflow: hidden;
+	background: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_select.gif');
+	margin: -5px 0 0 -5px;
+}
+.colorpicker_hue {
+	position: absolute;
+	top: 13px;
+	left: 171px;
+	width: 35px;
+	height: 150px;
+	cursor: n-resize;
+}
+.colorpicker_hue div {
+	position: absolute;
+	width: 35px;
+	height: 9px;
+	overflow: hidden;
+	background: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_indic.gif') left top;
+	margin: -4px 0 0 0;
+	left: 0px;
+}
+.colorpicker_new_color {
+	position: absolute;
+	width: 60px;
+	height: 30px;
+	left: 213px;
+	top: 13px;
+	background: #f00;
+}
+.colorpicker_current_color {
+	position: absolute;
+	width: 60px;
+	height: 30px;
+	left: 283px;
+	top: 13px;
+	background: #f00;
+}
+.colorpicker input {
+	background-color: transparent;
+	border: 1px solid transparent;
+	position: absolute;
+	font-size: 10px;
+	color: #898989;
+	top: 4px;
+	right: 11px;
+	text-align: right;
+	margin: 0;
+	padding: 0;
+	height: 11px;
+}
+.colorpicker_hex {
+	position: absolute;
+	width: 72px;
+	height: 22px;
+	background: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_hex.png') top;
+	left: 212px;
+	top: 142px;
+}
+.colorpicker_hex input {
+	right: 6px;
+}
+.colorpicker_field {
+	height: 22px;
+	width: 62px;
+	background-position: top;
+	position: absolute;
+}
+.colorpicker_field span {
+	position: absolute;
+	width: 12px;
+	height: 22px;
+	overflow: hidden;
+	top: 0;
+	right: 0;
+	cursor: n-resize;
+}
+.colorpicker_rgb_r {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_rgb_r.png');
+	top: 52px;
+	left: 212px;
+}
+.colorpicker_rgb_g {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_rgb_g.png');
+	top: 82px;
+	left: 212px;
+}
+.colorpicker_rgb_b {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_rgb_b.png');
+	top: 112px;
+	left: 212px;
+}
+.colorpicker_hsb_h {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_hsb_h.png');
+	top: 52px;
+	left: 282px;
+}
+.colorpicker_hsb_s {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_hsb_s.png');
+	top: 82px;
+	left: 282px;
+}
+.colorpicker_hsb_b {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_hsb_b.png');
+	top: 112px;
+	left: 282px;
+}
+.colorpicker_submit {
+	position: absolute;
+	width: 22px;
+	height: 22px;
+	background: url('{xen:property imagePath}/3ps/cmfu/images/colorpicker_submit.png') top;
+	left: 322px;
+	top: 142px;
+	overflow: hidden;
+}
+.colorpicker_focus {
+	background-position: center;
+}
+.colorpicker_hex.colorpicker_focus {
+	background-position: bottom;
+}
+.colorpicker_submit.colorpicker_focus {
+	background-position: bottom;
+}
+.colorpicker_slider {
+	background-position: bottom;
+}
+
+.colorSelector {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 36px;
+	height: 36px;
+	background: url('{xen:property imagePath}/3ps/cmfu/images/select2.png');
+}
+.colorSelector div {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	width: 28px;
+	height: 28px;
+	background: url('{xen:property imagePath}/3ps/cmfu/images/select2.png') center;
+}
+.colorPickerHolder {
+	top: 32px;
+	left: 0;
+	width: 356px;
+	height: 0;
+	overflow: hidden;
+	position: absolute;
+}
+.colorPickerHolder .colorpicker {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/custom_background.png');
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+.colorPickerHolder .colorpicker_hue div {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/custom_indic.gif');
+}
+.colorPickerHolder .colorpicker_hex {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/custom_hex.png');
+}
+.colorPickerHolder .colorpicker_rgb_r {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/custom_rgb_r.png');
+}
+.colorPickerHolder .colorpicker_rgb_g {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/custom_rgb_g.png');
+}
+.colorPickerHolder .colorpicker_rgb_b {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/custom_rgb_b.png');
+}
+.colorPickerHolder .colorpicker_hsb_s {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/custom_hsb_s.png');
+	display: none;
+}
+.colorPickerHolder .colorpicker_hsb_h {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/custom_hsb_h.png');
+	display: none;
+}
+.colorPickerHolder .colorpicker_hsb_b {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/custom_hsb_b.png');
+	display: none;
+}
+.colorPickerHolder .colorpicker_submit {
+	background-image: url('{xen:property imagePath}/3ps/cmfu/images/custom_submit.png');
+}
+.colorPickerHolder .colorpicker input {
+	color: #778398;
+}
+
+.colorWidget {
+	position: relative;
+	height: 36px;
+}]]></template>
   </templates>
   <public_template_modifications>
     <modification template="navigation_visitor_tab" modification_key="3ps_cmfu_top_username_styling" description="Apply custom styling to top username" execution_order="10" enabled="0" action="str_replace">

@@ -24,4 +24,12 @@ class ThreePointStudio_CustomMarkupForUser_Listener_LoadClass {
                 break;
         }
     }
+
+    public static function loadClassModel($class, array &$extend) {
+        switch ($class) {
+            case "XenForo_Model_User":
+                $extend[] = "ThreePointStudio_CustomMarkupForUser_Model_User";
+                break;
+        }
+    }
 }

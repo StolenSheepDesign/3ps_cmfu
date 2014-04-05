@@ -14,7 +14,7 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "type" => XenForo_Input::UINT,
             "permission" => "canUseBoldIn%sM",
             "format" => array(
-                "span" => array("attr" => array("class" => array("boldText")))
+                array("span", array("style" => array("font-weight" => array("bold"))))
             ),
         ),
         "italic" => array(
@@ -23,7 +23,7 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "type" => XenForo_Input::UINT,
             "permission" => "canUseItalicIn%sM",
             "format" => array(
-                "span" => array("attr" => array("class" => array("italicText")))
+                array("span", array("style" => array("font-style" => array("italic"))))
             ),
         ),
         "underline" => array(
@@ -32,7 +32,7 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "type" => XenForo_Input::UINT,
             "permission" => "canUseUnderlineIn%sM",
             "format" => array(
-                "span" => array("attr" => array("style" => array("text-decoration" => "underline")), "mergeProperties" => true)
+                array("span", array("style" => array("text-decoration" => array("underline"))), array('mergeProperties' => true))
             ),
         ),
         "overline" => array(
@@ -41,7 +41,7 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "type" => XenForo_Input::UINT,
             "permission" => "canUseOverlineIn%sM",
             "format" => array(
-                "span" => array("attr" => array("style" => array("text-decoration" => "overline")), "mergeProperties" => true)
+                array("span", array("style" => array("text-decoration" => array("overline"))), array('mergeProperties' => true))
             ),
         ),
         "strike" => array(
@@ -50,7 +50,7 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "type" => XenForo_Input::UINT,
             "permission" => "canUseStrikeIn%sM",
             "format" => array(
-                "span" => array("attr" => array("style" => array("text-decoration" => "line-through")), "mergeProperties" => true)
+                array("span", array("style" => array("text-decoration" => array("line-through"))), array('mergeProperties' => true))
             ),
         ),
         "text_colour" => array(
@@ -60,7 +60,7 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "enable_prefix" => true,
             "permission" => "canUseTextColourIn%sM",
             "format" => array(
-                "span" => array("attr" => array("style" => array("color" => "{_value}")), "variableFeed" => array("_value"))
+                array("span", array("style" => array("color" => array("{_value}"))), array("variableFeed" => array("_value")))
             ),
         ),
         "font_face" => array(
@@ -70,7 +70,7 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "enable_prefix" => true,
             "permission" => "canUseFontIn%sM",
             "format" => array(
-                "span" => array("attr" => array("style" => array("font-family" => "{fontFamily}")), "variableFeed" => array("fontFamily"))
+                array("span", array("style" => array("font-family" => array("{fontFamily}"))), array("variableFeed" => array("fontFamily")))
             ),
         ),
         // Background and Borders
@@ -81,7 +81,7 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "enable_prefix" => true,
             "permission" => "canUseBGColourIn%sM",
             "format" => array(
-                "span" => array("attr" => array("style" => array("background-color" => "{_value}")), "variableFeed" => array("_value"))
+                array("span", array("style" => array("background-color" => array("{_value}"))), array("variableFeed" => array("_value")))
             ),
         ),
         "border" => array(
@@ -90,7 +90,7 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "type" => XenForo_Input::UINT,
             "permission" => "canUseBorderIn%sM",
             "format" => array(
-                "span" => array("attr" => array("style" => array("border" => "{borderDefaults}")), "variableFeed" => array("borderDefaults"))
+                array("span", array("style" => array("border-style" => array("solid"), "border-width" => array("1.7px"))))
             ),
         ),
         "border_colour" => array(
@@ -99,9 +99,9 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "type" => XenForo_Input::STRING,
             "enable_prefix" => true,
             "permission" => "canUseBorderColourIn%sM",
-            'requires' => array(array("border", 1)),
+            "requires" => array(array("border", 1)),
             "format" => array(
-                "span" => array("attr" => array("style" => array("border-color" => "{_value}")), "variableFeed" => array("_value"))
+                array("span", array("style" => array("border-color" => array("{_value}"))), array("variableFeed" => array("_value")))
             ),
         ),
         "border_style" => array(
@@ -110,16 +110,11 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
             "type" => XenForo_Input::UINT,
             "enable_prefix" => true,
             "permission" => "canUseBorderStyleIn%sM",
+            "requires" => array(array("border", 1)),
             "format" => array(
-                "span" => array("attr" => array("style" => array("border-style" => "{borderStyle}")), "variableFeed" => array("borderStyle"))
+                array("span", array("style" => array("border-style" => array("{borderStyle}"))), array("variableFeed" => array("borderStyle")))
             ),
         ),
-    );
-
-    public static $borderDefaults = array(
-        "border_colour" => "",
-        "border_style" => "solid",
-        "border_width" => "1.7px" // Reserved
     );
 
     public static $borderList = array(
@@ -143,8 +138,8 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
         4 => array("name" => "Courier New", "fullname" => "'Courier New', Courier, monospace"),
         5 => array("name" => "Georgia", "fullname" => 'Georgia, serif'),
         6 => array("name" => "Impact", "fullname" => 'Impact, Charcoal, sans-serif'),
-        7 => array("name" => "Lucid Console", "fullname" => "'Lucida Console', Monaco, monospace"),
-        8 => array("name" => "Lucid Sans Unicode", "fullname" => "'Lucida Sans Unicode', 'Lucida Grande', sans-serif"),
+        7 => array("name" => "Lucida Console", "fullname" => "'Lucida Console', Monaco, monospace"),
+        8 => array("name" => "Lucida Sans Unicode", "fullname" => "'Lucida Sans Unicode', 'Lucida Grande', sans-serif"),
         9 => array("name" => "Palatino Linotype", "fullname" => "'Palatino Linotype', 'Book Antiqua', Palatino, serif"),
         10 => array("name" => "Tahoma", "fullname" => 'Tahoma, Geneva, sans-serif'),
         11 => array("name" => "Times New Roman", "fullname" => "'Times New Roman', Times, serif"),
@@ -156,4 +151,6 @@ class ThreePointStudio_CustomMarkupForUser_Constants {
         "username" => array(),
         "usertitle" => array()
     );
+
+    public static $categories = array("username", "usertitle");
 }

@@ -8,7 +8,12 @@
 class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_11 extends ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base {
     public static function helperUserTitle($user, $allowCustomTitle = true) {
         $result = parent::helperUserTitle($user, $allowCustomTitle);
-        $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($user, "usertitle");
+        if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
+            $renderCache = unserialize($user["3ps_cmfu_render_cache"]);
+            $html = $renderCache["username"];
+        } else {
+            $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup(unserialize($user["3ps_cmfu_options"]), "usertitle");
+        }
         $finalHTML = str_replace("{inner}", $result, $html);
         return $finalHTML;
     }

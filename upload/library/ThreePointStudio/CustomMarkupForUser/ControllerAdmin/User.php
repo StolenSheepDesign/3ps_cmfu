@@ -12,8 +12,6 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_User extends XFCP_Thr
         if ($userId == 0) return $response; // Not sure why, but don't do it
         $options = $this->_input->filterSingle("3ps_cmfu_options", XenForo_Input::ARRAY_SIMPLE);
 
-        // For I am lazy
-        $finalData = array();
         if (empty($options)) {
             // Nothing in here, populate it with nothingness
             $options = ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray;
@@ -22,7 +20,7 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_User extends XFCP_Thr
         // Pre-check cleanup
         foreach ($options as $category => $catArray) {
             foreach ($catArray as $itemName => $itemValue) {
-                if (ThreePointStudio_CustomMarkupForUser_Helpers::startswith($itemName, "enable_")) {
+                if (ThreePointStudio_CustomMarkupForUser_Helpers::startsWith($itemName, "enable_")) {
                     unset($options[$category][$itemName]); // Ignore any placeholders
                     continue;
                 }
@@ -51,6 +49,9 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_User extends XFCP_Thr
         $dw = XenForo_DataWriter::create('XenForo_DataWriter_User');
         $dw->setExistingData($userId);
         $dw->set("3ps_cmfu_options", serialize($options));
+        if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
+            $dw->rebuildCustomMarkupCache();
+        }
         $dw->save();
         return $response; // No error from our end, continue executing
     }
