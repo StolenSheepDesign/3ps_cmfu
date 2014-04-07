@@ -11,12 +11,20 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
         $version = is_array($installedAddon) ? $installedAddon['version_id'] : 0;
         if ($version == 0) {
             $db->query("ALTER TABLE `xf_user`
-                        ADD COLUMN  `3ps_cmfu_options` BLOB NOT NULL AFTER `is_staff`,
-                        ADD COLUMN `3ps_cmfu_render_cache` BLOB NOT NULL AFTER `3ps_cmfu_options`");
+                        ADD COLUMN  `3ps_cmfu_options` BLOB NULL AFTER `is_staff`,
+                        ADD COLUMN `3ps_cmfu_render_cache` BLOB NULL AFTER `3ps_cmfu_options`");
         }
         if ($version > 0) { // Upgrade section
             if ($version < 3) { // 1.0.0 Beta 1 - 1.0.0
-                $db->query("ALTER TABLE `xf_user` ADD COLUMN `3ps_cmfu_render_cache` BLOB NOT NULL AFTER `3ps_cmfu_options`");
+                $db->query("ALTER TABLE `xf_user` ADD COLUMN `3ps_cmfu_render_cache` BLOB NULL AFTER `3ps_cmfu_options`");
+            }
+            
+            if ($version < 'XXX')
+            {
+                $db->query("ALTER TABLE `xf_user`
+                    CHANGE `3ps_cmfu_options` `3ps_cmfu_options` BLOB NULL,
+                    CHANGE `3ps_cmfu_render_cache` `3ps_cmfu_render_cache` BLOB NULL
+                ");
             }
         }
     }
