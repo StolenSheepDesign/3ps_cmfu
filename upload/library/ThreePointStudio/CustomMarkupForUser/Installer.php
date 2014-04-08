@@ -19,8 +19,7 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
                 $db->query("ALTER TABLE `xf_user` ADD COLUMN `3ps_cmfu_render_cache` BLOB NULL AFTER `3ps_cmfu_options`");
             }
             
-            if ($version < 'XXX')
-            {
+            if ($version < 4) { // 1.0.0 - 1.0.1
                 $db->query("ALTER TABLE `xf_user`
                     CHANGE `3ps_cmfu_options` `3ps_cmfu_options` BLOB NULL,
                     CHANGE `3ps_cmfu_render_cache` `3ps_cmfu_render_cache` BLOB NULL
