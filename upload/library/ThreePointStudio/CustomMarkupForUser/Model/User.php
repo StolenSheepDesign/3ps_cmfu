@@ -21,11 +21,7 @@ class ThreePointStudio_CustomMarkupForUser_Model_User extends XFCP_ThreePointStu
                 $renderCache[$category] = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, $category);
             }
         }
-        $db = $this->_getDb();
-        $db->update('xf_user',
-            array("3ps_cmfu_render_cache" => serialize($renderCache)),
-            'user_id = ' . $db->quote($userId)
-        );
+        self::create("XenForo_Model_DataRegistry")->set("3ps_cmfu_render_cache_" . $userId, $renderCache);
     }
 
     public function insertDefaultCustomMarkup($userId) {

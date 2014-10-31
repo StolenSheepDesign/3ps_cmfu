@@ -1,6 +1,8 @@
 <?php
 
 class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_Template_Helper_Core {
+    protected static $_modelCache = array();
+
     public static function helperUserName(array $user, $class = '', $rich = false) {
         if (!$rich and XenForo_Application::getOptions()->get("3ps_cmfu_overridePlainUsernameHelper")) {
             $rich = true;
@@ -20,7 +22,7 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
             $user["3ps_cmfu_options"] = XenForo_Application::getDb()->fetchOne("SELECT `3ps_cmfu_options` FROM `xf_user` WHERE `user_id`=?", $user["user_id"]);
         }
         if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache") && !isset($user["3ps_cmfu_render_cache"])) {
-            $user["3ps_cmfu_render_cache"] = XenForo_Application::getDb()->fetchOne("SELECT `3ps_cmfu_render_cache` FROM `xf_user` WHERE `user_id`=?", $user["user_id"]);
+            $user["3ps_cmfu_render_cache"] = XenForo_Model::create("XenForo_Model_DataRegistry")->get("3ps_cmfu_render_cache_" . $user["user_id"]);
         }
         if ($rich) {
             $username = XenForo_Template_Helper_Core::callHelper('richusername', array($user, $username));
@@ -60,12 +62,13 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
         if (empty($user["user_id"])) {
             $html = "{inner}";
         } elseif (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
-            $renderCache = unserialize($user["3ps_cmfu_render_cache"]);
+            $dr = self::_getDataRegistryModel();
+            $renderCache = $dr->get("3ps_cmfu_render_cache_" . $user["user_id"]);
             if (!empty($renderCache) && !empty($renderCache["username"])) {
                 $html = $renderCache["username"];
             } else {
                 $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "username");
-                XenForo_Model::create("XenForo_Model_User")->rebuildCustomMarkupCache($user["user_id"]);
+                $dr->set("3ps_cmfu_render_cache_" . $user["user_id"], $html);
             }
         } else {
             $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "username");
@@ -90,12 +93,13 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
             XenForo_Model::create("XenForo_Model_User")->insertDefaultCustomMarkup($user["user_id"]);
         }
         if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
-            $renderCache = unserialize($user["3ps_cmfu_render_cache"]);
+            $dr = self::_getDataRegistryModel();
+            $renderCache = $dr->get("3ps_cmfu_render_cache_" . $user["user_id"]);
             if (!empty($renderCache) && !empty($renderCache["usertitle"])) {
                 $html = $renderCache["usertitle"];
             } else {
                 $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "usertitle");
-                XenForo_Model::create("XenForo_Model_User")->rebuildCustomMarkupCache($user["user_id"]);
+                $dr->set("3ps_cmfu_render_cache_" . $user["user_id"], $html);
             }
         } else {
             $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "usertitle");
@@ -106,5 +110,24 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
 
     public static function helperPlainUserTitle($user, $allowCustomTitle = true, $withBanner = false) {
         return parent::helperUserTitle($user, $allowCustomTitle, $withBanner);
+    }
+
+    protected static function _getDataRegistryModel() {
+        return self::getModelFromCache("XenForo_Model_DataRegistry");
+    }
+
+    /**
+     * Gets the specified model object from the cache. If it does not exist,
+     * it will be instantiated.
+     *
+     * @param string $class Name of the class to load
+     *
+     * @return XenForo_Model
+     */
+    protected static function getModelFromCache($class) {
+        if (!isset(self::$_modelCache[$class])) {
+            self::$_modelCache[$class] = XenForo_Model::create($class);
+        }
+        return self::$_modelCache[$class];
     }
 }
