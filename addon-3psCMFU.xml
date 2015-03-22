@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <addon addon_id="3psCMFU" title="[3.studIo] Custom Markup For Users" version_string="1.0.1" version_id="4" url="http://xenforo.com/community/resources/3-studio-custom-markup-for-users.1958/" install_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" install_callback_method="install" uninstall_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" uninstall_callback_method="uninstall">
-  <admin_navigation/>
+  <admin_navigation>
+    <navigation navigation_id="3ps_cmfu_presets" parent_navigation_id="userCustomization" display_order="1" link="3ps-cmfu/presets" admin_permission_id="" debug_only="0" hide_no_children="0"/>
+  </admin_navigation>
   <admin_permissions/>
   <admin_style_properties/>
   <admin_templates>
@@ -134,142 +136,14 @@ $(function () {
     }
 });
 </script>]]></template>
-    <template title="3ps_cmfu_cmcontrol"><![CDATA[<xen:require css="3ps_cmfu_colorpicker.css" />
-<xen:require js="js/3ps/cmfu/colorpicker.js" />
-<xen:include template="3ps_cmfu.js" />
-
-<h3 class="sectionHeader">{xen:phrase 3ps_cmfu_x_markup, 'title={$title}'}</h3>
-<dl class="ctrlUnit">
-    <dt>{xen:phrase 3ps_cmfu_users_current_x_markup, 'title={$title}'}</dt>
-    <dd id="currentMarkup_{$titleCode}">{xen:raw $currentMarkupRender}</dd>
-</dl>
-<dl class="ctrlUnit OptOut">
-    <dt>{xen:phrase 3ps_cmfu_x_text_effects, 'title={$title}'}</dt>
-    <dd>
-        <ul>
-            <li><label>
-                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][bold]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_bold" {xen:checked $userOptions.bold} /> {xen:phrase 3ps_cmfu_apply_bold_effect_to_x, 'title={$title}'}
-            </label></li>
-            
-            <li><label>
-                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][italic]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_italic" {xen:checked $userOptions.italic} /> {xen:phrase 3ps_cmfu_apply_italic_effect_to_x, 'title={$title}'}
-            </label></li>
-            
-            <li><label>
-                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][underline]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_underline" {xen:checked $userOptions.underline} /> {xen:phrase 3ps_cmfu_underline_x, 'title={$title}'}
-            </label></li>
-
-            <li><label>
-                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][strike]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_strike" {xen:checked $userOptions.strike} /> {xen:phrase 3ps_cmfu_strike_through_x, 'title={$title}'}
-            </label></li>
-
-            <li><label>
-                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][overline]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_overline" {xen:checked $userOptions.overline} /> {xen:phrase 3ps_cmfu_overline_x, 'title={$title}'}
-            </label></li>
-
-            <li>
-                <label>
-                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_text_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour" {xen:checked $userOptions.enable_text_colour} /> {xen:phrase 3ps_cmfu_enable_x_colour, 'title={$title}'}
-                </label>
-                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour_Disabler">
-                    <li>
-                        <label>
-                            <input type="hidden" name="3ps_cmfu_options[{$titleCode}][text_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_text_colour" value="{$userOptions.text_colour}" />
-                            <div id="colorWidget_{$titleCode}_text_colour" class="colorWidget">
-                                <div id="colorSelector_{$titleCode}_text_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_text_colour" style="background-color: {$userOptions.text_colour}"></div></div>
-                                <div id="colorPickerHolder_{$titleCode}_text_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
-                            </div>
-                        </label>
-                    </li>
-                </ul>
-            </li>
-
-            <li>
-                <label>
-                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_font_face]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face" {xen:checked $userOptions.enable_font_face} /> {xen:phrase 3ps_cmfu_enable_x_font, 'title={$title}'}
-                </label>
-                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face_Disabler">
-                    <li>
-                        <label>
-                            {xen:phrase 3ps_cmfu_x_font, 'title={$title}'}: 
-                            <select name="3ps_cmfu_options[{$titleCode}][font_face]" class="textCtrl autoSize">
-                                <xen:foreach loop="$fontList" key="$fontId" value="$fontValue">
-                                    <option style="font-family: {xen:raw $fontValue.fullname}" value="{$fontId}" {xen:selected '{$fontId} == {$userOptions.font_face}'}>{$fontValue.name}</option>
-                                </xen:foreach>
-                            </select>
-                        </label>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </dd>
-</dl>
-
-<dl class="ctrlUnit OptOut">
-    <dt>{xen:phrase 3ps_cmfu_x_background_and_borders, 'title={$title}'}</dt>
-    <dd>
-        <ul>
-            <li>
-                <label>
-                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_background_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour" {xen:checked $userOptions.enable_background_colour} /> {xen:phrase 3ps_cmfu_enable_x_background_colour, 'title={$title}'}
-                </label>
-                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour_Disabler">
-                    <li>
-                        <label>
-                            <input type="hidden" name="3ps_cmfu_options[{$titleCode}][background_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_background_colour" value="{$userOptions.background_colour}" />
-                            <div id="colorWidget_{$titleCode}_background_colour" class="colorWidget">
-                                <div id="colorSelector_{$titleCode}_background_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_background_colour" style="background-color: {$userOptions.background_colour}"></div></div>
-                                <div id="colorPickerHolder_{$titleCode}_background_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
-                            </div>
-                        </label>
-                    </li>
-                </ul>
-            </li>
-
-            <li>
-                <label>
-                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][border]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_border" {xen:checked $userOptions.border} /> {xen:phrase 3ps_cmfu_enable_x_border, 'title={$title}'}
-                </label>
-                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_border_Disabler">
-                    <li>
-                        <label>
-                            <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_border_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour" {xen:checked $userOptions.enable_border_colour} /> {xen:phrase 3ps_cmfu_enable_x_border_colour, 'title={$title}'}
-                        </label>
-                        <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour_Disabler">
-                            <li>
-                                <label>
-                                    <input type="hidden" name="3ps_cmfu_options[{$titleCode}][border_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_border_colour" value="{$userOptions.border_colour}" />
-                                    <div id="colorWidget_{$titleCode}_border_colour" class="colorWidget">
-                                        <div id="colorSelector_{$titleCode}_border_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_border_colour" style="background-color: {$userOptions.border_colour}"></div></div>
-                                        <div id="colorPickerHolder_{$titleCode}_border_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
-                                    </div>
-                                </label>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li>
-                        <label>
-                            <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_border_style]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style" {xen:checked $userOptions.enable_border_style} /> {xen:phrase 3ps_cmfu_enable_x_border_style, 'title={$title}'}
-                        </label>
-                        <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style_Disabler">
-                            <li>
-                                <label>
-                                    {xen:phrase 3ps_cmfu_border_style}: 
-                                    <select name="3ps_cmfu_options[{$titleCode}][border_style]" class="textCtrl autoSize">
-                                        <xen:foreach loop="$borderList" key="$borderId" value="$border">
-                                            <option value="{$borderId}" {xen:selected '{$borderId} == {$userOptions.border_style}'}>{$border}</option>
-                                        </xen:foreach>
-                                    </select>
-                                </label>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </dd>
-</dl>]]></template>
+    <template title="3ps_cmfu_cmcontrol"><![CDATA[<h3 class="sectionHeader">{xen:phrase 3ps_cmfu_x_markup, 'title={$title}'}</h3>
+<xen:include template="3ps_cmfu_options_current_markup_user" />
+<xen:include template="3ps_cmfu_options_text_effects" />
+<xen:include template="3ps_cmfu_options_backgrounds_borders" />]]></template>
+    <template title="3ps_cmfu_cmcontrol_preset"><![CDATA[<h3 class="sectionHeader">{xen:phrase 3ps_cmfu_x_markup, 'title={$title}'}</h3>
+<xen:include template="3ps_cmfu_options_current_markup_preview" />
+<xen:include template="3ps_cmfu_options_text_effects" />
+<xen:include template="3ps_cmfu_options_backgrounds_borders" />]]></template>
     <template title="3ps_cmfu_colorpicker.css"><![CDATA[.colorpicker {
 	width: 356px;
 	height: 176px;
@@ -499,6 +373,229 @@ $(function () {
 	position: relative;
 	height: 36px;
 }]]></template>
+    <template title="3ps_cmfu_options_backgrounds_borders"><![CDATA[<xen:require css="3ps_cmfu_colorpicker.css" />
+<xen:require js="js/3ps/cmfu/colorpicker.js" />
+<xen:include template="3ps_cmfu.js" />
+
+<dl class="ctrlUnit OptOut">
+    <dt>{xen:phrase 3ps_cmfu_x_background_and_borders, 'title={$title}'}</dt>
+    <dd>
+        <ul>
+            <li>
+                <label>
+                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_background_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour" {xen:checked $userOptions.enable_background_colour} /> {xen:phrase 3ps_cmfu_enable_x_background_colour, 'title={$title}'}
+                </label>
+                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour_Disabler">
+                    <li>
+                        <label>
+                            <input type="hidden" name="3ps_cmfu_options[{$titleCode}][background_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_background_colour" value="{$userOptions.background_colour}" />
+                            <div id="colorWidget_{$titleCode}_background_colour" class="colorWidget">
+                                <div id="colorSelector_{$titleCode}_background_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_background_colour" style="background-color: {$userOptions.background_colour}"></div></div>
+                                <div id="colorPickerHolder_{$titleCode}_background_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <label>
+                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][border]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_border" {xen:checked $userOptions.border} /> {xen:phrase 3ps_cmfu_enable_x_border, 'title={$title}'}
+                </label>
+                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_border_Disabler">
+                    <li>
+                        <label>
+                            <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_border_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour" {xen:checked $userOptions.enable_border_colour} /> {xen:phrase 3ps_cmfu_enable_x_border_colour, 'title={$title}'}
+                        </label>
+                        <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour_Disabler">
+                            <li>
+                                <label>
+                                    <input type="hidden" name="3ps_cmfu_options[{$titleCode}][border_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_border_colour" value="{$userOptions.border_colour}" />
+                                    <div id="colorWidget_{$titleCode}_border_colour" class="colorWidget">
+                                        <div id="colorSelector_{$titleCode}_border_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_border_colour" style="background-color: {$userOptions.border_colour}"></div></div>
+                                        <div id="colorPickerHolder_{$titleCode}_border_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
+                                    </div>
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <label>
+                            <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_border_style]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style" {xen:checked $userOptions.enable_border_style} /> {xen:phrase 3ps_cmfu_enable_x_border_style, 'title={$title}'}
+                        </label>
+                        <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style_Disabler">
+                            <li>
+                                <label>
+                                    {xen:phrase 3ps_cmfu_border_style}: 
+                                    <select name="3ps_cmfu_options[{$titleCode}][border_style]" class="textCtrl autoSize">
+                                        <xen:foreach loop="$borderList" key="$borderId" value="$border">
+                                            <option value="{$borderId}" {xen:selected '{$borderId} == {$userOptions.border_style}'}>{$border}</option>
+                                        </xen:foreach>
+                                    </select>
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </dd>
+</dl>]]></template>
+    <template title="3ps_cmfu_options_current_markup_preview"><![CDATA[<dl class="ctrlUnit">
+    <dt>{xen:phrase 3ps_cmfu_user_markup_preview, 'title={$title}'}</dt>
+    <dd id="currentMarkup_{$titleCode}">{xen:raw $currentMarkupRender}</dd>
+</dl>]]></template>
+    <template title="3ps_cmfu_options_current_markup_user"><![CDATA[<dl class="ctrlUnit">
+    <dt>{xen:phrase 3ps_cmfu_users_current_x_markup, 'title={$title}'}</dt>
+    <dd id="currentMarkup_{$titleCode}">{xen:raw $currentMarkupRender}</dd>
+</dl>]]></template>
+    <template title="3ps_cmfu_options_text_effects"><![CDATA[<xen:require css="3ps_cmfu_colorpicker.css" />
+<xen:require js="js/3ps/cmfu/colorpicker.js" />
+<xen:include template="3ps_cmfu.js" />
+
+<dl class="ctrlUnit OptOut">
+    <dt>{xen:phrase 3ps_cmfu_x_text_effects, 'title={$title}'}</dt>
+    <dd>
+        <ul>
+            <li><label>
+                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][bold]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_bold" {xen:checked $userOptions.bold} /> {xen:phrase 3ps_cmfu_apply_bold_effect_to_x, 'title={$title}'}
+            </label></li>
+            
+            <li><label>
+                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][italic]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_italic" {xen:checked $userOptions.italic} /> {xen:phrase 3ps_cmfu_apply_italic_effect_to_x, 'title={$title}'}
+            </label></li>
+            
+            <li><label>
+                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][underline]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_underline" {xen:checked $userOptions.underline} /> {xen:phrase 3ps_cmfu_underline_x, 'title={$title}'}
+            </label></li>
+
+            <li><label>
+                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][strike]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_strike" {xen:checked $userOptions.strike} /> {xen:phrase 3ps_cmfu_strike_through_x, 'title={$title}'}
+            </label></li>
+
+            <li><label>
+                <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][overline]" value="1" id="ctrl_3ps_cmfu_options_{$titleCode}_overline" {xen:checked $userOptions.overline} /> {xen:phrase 3ps_cmfu_overline_x, 'title={$title}'}
+            </label></li>
+
+            <li>
+                <label>
+                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_text_colour]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour" {xen:checked $userOptions.enable_text_colour} /> {xen:phrase 3ps_cmfu_enable_x_colour, 'title={$title}'}
+                </label>
+                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour_Disabler">
+                    <li>
+                        <label>
+                            <input type="hidden" name="3ps_cmfu_options[{$titleCode}][text_colour]" id="ctrl_3ps_cmfu_options_{$titleCode}_text_colour" value="{$userOptions.text_colour}" />
+                            <div id="colorWidget_{$titleCode}_text_colour" class="colorWidget">
+                                <div id="colorSelector_{$titleCode}_text_colour" class="colorSelector"><div id="colorSelectorIndicator_{$titleCode}_text_colour" style="background-color: {$userOptions.text_colour}"></div></div>
+                                <div id="colorPickerHolder_{$titleCode}_text_colour" class="colorPickerHolder"" style="height: 0px; display: block;"></div>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <label>
+                    <input type="checkbox" name="3ps_cmfu_options[{$titleCode}][enable_font_face]" value="1" class="Disabler" id="ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face" {xen:checked $userOptions.enable_font_face} /> {xen:phrase 3ps_cmfu_enable_x_font, 'title={$title}'}
+                </label>
+                <ul id="ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face_Disabler">
+                    <li>
+                        <label>
+                            {xen:phrase 3ps_cmfu_x_font, 'title={$title}'}: 
+                            <select name="3ps_cmfu_options[{$titleCode}][font_face]" class="textCtrl autoSize">
+                                <xen:foreach loop="$fontList" key="$fontId" value="$fontValue">
+                                    <option style="font-family: {xen:raw $fontValue.fullname}" value="{$fontId}" {xen:selected '{$fontId} == {$userOptions.font_face}'}>{$fontValue.name}</option>
+                                </xen:foreach>
+                            </select>
+                        </label>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </dd>
+</dl>
+]]></template>
+    <template title="3ps_cmfu_presets_delete"><![CDATA[<xen:title>{xen:phrase 3ps_cmfu_confirm_deletion_of_preset}: {$preset.title}</xen:title>
+<xen:h1>{xen:phrase 3ps_cmfu_confirm_deletion_of_preset}</xen:h1>
+
+<xen:navigation>
+	<xen:breadcrumb href="{xen:adminlink '3ps-cmfu/presets/edit', $preset}">{$preset.title}</xen:breadcrumb>
+</xen:navigation>
+
+<xen:require css="public:delete_confirmation.css" />
+
+<xen:form action="{xen:adminlink '3ps-cmfu/presets/delete'}" class="deleteConfirmForm formOverlay">
+
+	<p>{xen:phrase 3ps_cmfu_please_confirm_that_you_want_to_delete_following_preset}:</p>
+	<strong><a href="{xen:adminlink '3ps-cmfu/presets/edit', $preset}">{$preset.title}</a></strong>
+
+	<input type="hidden" name="preset_id" value="{$preset.preset_id}" />
+	<input type="hidden" name="_xfConfirm" value="1" />
+
+	<xen:submitunit save="{xen:phrase 3ps_cmfu_delete_preset}" />
+</xen:form>]]></template>
+    <template title="3ps_cmfu_presets_edit"><![CDATA[<xen:title>{xen:if '{$preset.preset_id}', '{xen:phrase 3ps_cmfu_edit_preset}: {$preset.title}', '{xen:phrase 3ps_cmfu_add_new_preset}'}</xen:title>
+
+<xen:if is="{$preset.preset_id}">
+	<xen:navigation>
+		<xen:breadcrumb href="{xen:adminlink 3ps-cmfu/presets}#{xen:helper listitemid, $preset.preset_id}">{$preset.title}</xen:breadcrumb>
+	</xen:navigation>
+</xen:if>
+
+<xen:form action="{xen:adminlink '3ps-cmfu/presets/save'}" class="AutoValidator" data-redirect="yes">
+	<xen:textboxunit label="{xen:phrase title}:" name="title" value="{$preset.title}" data-livetitletemplate="{xen:if {$preset.preset_id},
+		'{xen:phrase 3ps_cmfu_edit_preset}: <em>%s</em>',
+		'{xen:phrase 3ps_cmfu_add_new_preset}: <em>%s</em>'}" />
+
+	<xen:checkboxunit label="">
+		<xen:option name="active" selected="{$preset.active}">{xen:phrase 3ps_cmfu_preset_is_active}</xen:option>
+	</xen:checkboxunit>
+	
+	<xen:checkboxunit label="{xen:phrase 3ps_cmfu_enable_preset_for_user_group}:" name="user_groups" class="checkboxColumns">
+		<xen:options source="$userGroups" />
+	</xen:checkboxunit>
+	
+	{xen:raw $optionsHTML}
+
+	<input type="hidden" name="preset_id" value="{$preset.preset_id}" />
+
+	<xen:submitunit save="{xen:phrase 3ps_cmfu_save_preset}"></xen:submitunit>
+</xen:form>]]></template>
+    <template title="3ps_cmfu_presets_list"><![CDATA[<xen:title>{xen:phrase 3ps_cmfu_custom_user_markup_presets}</xen:title>
+
+<xen:topctrl>
+	<a href="{xen:adminlink '3ps-cmfu/presets/add'}" class="button">+ {xen:phrase 3ps_cmfu_add_new_preset}</a>
+</xen:topctrl>
+
+<xen:require css="filter_list.css" />
+<xen:require js="js/xenforo/filter_list.js" />
+
+<xen:form action="{xen:adminlink '3ps-cmfu/presets'}" class="section">
+    <xen:if is="{$presets}">
+    	<h2 class="subHeading">
+    		<xen:include template="filter_list_controls" />
+    		{xen:phrase 3ps_cmfu_presets}
+    	</h2>
+
+    	<ol class="FilterList">
+    		<xen:foreach loop="$presets" key="$presetID" value="$preset">
+    			<xen:listitem id="{$preset.preset_id}"
+    				label="{$preset.title}"
+    				snippet=""
+				href="{xen:adminlink '3ps-cmfu/presets/edit', $preset}"
+    				delete="{xen:adminlink '3ps-cmfu/presets/delete', $preset}"
+    				deletehint="{xen:phrase 3ps_cmfu_delete_preset}">
+    			</xen:listitem>
+    		</xen:foreach>
+    	</ol>
+
+    	<p class="sectionFooter">{xen:phrase showing_x_of_y_items, 'count=<span class="FilterListCount">{xen:count $presets}</span>', 'total={xen:count $presets}'}</p>
+
+    <xen:else />
+    	<div class="noResults">{xen:phrase 3ps_cmfu_no_presets_defined}</div>
+    </xen:if>
+</xen:form>]]></template>
     <template title="3ps_cmfu_user_edit_tab"><![CDATA[<li id="tab3psCMFU"><a>{xen:phrase 3ps_cmfu_custom_markup}</a></li>]]></template>
   </admin_templates>
   <admin_template_modifications>
@@ -614,6 +711,7 @@ value</sub_options>
     </interface_groups>
   </permissions>
   <phrases>
+    <phrase title="3ps_cmfu_add_new_preset" version_id="4" version_string="1.0.1"><![CDATA[Add New Preset]]></phrase>
     <phrase title="3ps_cmfu_apply_bold_effect_to_x" version_id="1" version_string="1.0.0"><![CDATA[Apply <span style="font-weight: bold;">bold</span> effect to {title}]]></phrase>
     <phrase title="3ps_cmfu_apply_italic_effect_to_x" version_id="1" version_string="1.0.0"><![CDATA[Apply <i>italic</i> effect to {title}]]></phrase>
     <phrase title="3ps_cmfu_background_colour" version_id="1" version_string="1.0.0"><![CDATA[Background colour]]></phrase>
@@ -623,8 +721,13 @@ value</sub_options>
     <phrase title="3ps_cmfu_border_style" version_id="1" version_string="1.0.0"><![CDATA[Border Style]]></phrase>
     <phrase title="3ps_cmfu_border_style_option_invalid" version_id="1" version_string="1.0.0"><![CDATA[Border style option invalid.]]></phrase>
     <phrase title="3ps_cmfu_colour_code_invalid" version_id="1" version_string="1.0.0"><![CDATA[Colour code invalid.]]></phrase>
+    <phrase title="3ps_cmfu_confirm_deletion_of_preset" version_id="4" version_string="1.0.1"><![CDATA[Confirm Deletion of Preset]]></phrase>
     <phrase title="3ps_cmfu_credit_notice" version_id="3" version_string="1.0.0"><![CDATA[Custom Markup for User powered by <a href="http://3pointstudio.com">3.studIo</a>. The forum owner is a good person!]]></phrase>
     <phrase title="3ps_cmfu_custom_markup" version_id="1" version_string="1.0.0 Alpha 2"><![CDATA[Custom Markup]]></phrase>
+    <phrase title="3ps_cmfu_custom_user_markup_presets" version_id="4" version_string="1.0.1"><![CDATA[Custom User Markup Presets]]></phrase>
+    <phrase title="3ps_cmfu_delete_preset" version_id="4" version_string="1.0.1"><![CDATA[Delete Preset]]></phrase>
+    <phrase title="3ps_cmfu_edit_preset" version_id="4" version_string="1.0.1"><![CDATA[Edit Preset]]></phrase>
+    <phrase title="3ps_cmfu_enable_preset_for_user_group" version_id="4" version_string="1.0.1"><![CDATA[Enable this preset for these user groups]]></phrase>
     <phrase title="3ps_cmfu_enable_x_background_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} background colour]]></phrase>
     <phrase title="3ps_cmfu_enable_x_border" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border]]></phrase>
     <phrase title="3ps_cmfu_enable_x_border_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border colour]]></phrase>
@@ -632,15 +735,23 @@ value</sub_options>
     <phrase title="3ps_cmfu_enable_x_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} colour]]></phrase>
     <phrase title="3ps_cmfu_enable_x_font" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} font]]></phrase>
     <phrase title="3ps_cmfu_italic_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Italic option selection invalid.]]></phrase>
+    <phrase title="3ps_cmfu_no_presets_defined" version_id="4" version_string="1.0.1"><![CDATA[No presets defined.]]></phrase>
     <phrase title="3ps_cmfu_overline_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Overline option selection invalid.]]></phrase>
     <phrase title="3ps_cmfu_overline_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: overline;">Overline</span> {title}]]></phrase>
+    <phrase title="3ps_cmfu_please_confirm_that_you_want_to_delete_following_preset" version_id="4" version_string="1.0.1"><![CDATA[Please confirm that you want to delete the following preset]]></phrase>
+    <phrase title="3ps_cmfu_presets" version_id="4" version_string="1.0.1"><![CDATA[Presets]]></phrase>
+    <phrase title="3ps_cmfu_presets_list" version_id="4" version_string="1.0.1"><![CDATA[Custom Markup Presets]]></phrase>
+    <phrase title="3ps_cmfu_preset_is_active" version_id="4" version_string="1.0.1"><![CDATA[Preset is active]]></phrase>
     <phrase title="3ps_cmfu_rebuild_user_markup_cache" version_id="3" version_string="1.0.0"><![CDATA[Rebuild user markup cache]]></phrase>
+    <phrase title="3ps_cmfu_requested_preset_not_found" version_id="4" version_string="1.0.1"><![CDATA[The preset you requested was not found.]]></phrase>
+    <phrase title="3ps_cmfu_save_preset" version_id="4" version_string="1.0.1"><![CDATA[Save Preset]]></phrase>
     <phrase title="3ps_cmfu_strike_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Strike option selection invalid.]]></phrase>
     <phrase title="3ps_cmfu_strike_through_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: line-through;">Strike through</span> {title}]]></phrase>
     <phrase title="3ps_cmfu_text_color" version_id="3" version_string="1.0.0"><![CDATA[Text colour]]></phrase>
     <phrase title="3ps_cmfu_underline_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Underline option selection invalid.]]></phrase>
     <phrase title="3ps_cmfu_underline_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: underline;">Underline</span> {title}]]></phrase>
     <phrase title="3ps_cmfu_users_current_x_markup" version_id="1" version_string="1.0.0 Alpha 2"><![CDATA[User's current {title} markup]]></phrase>
+    <phrase title="3ps_cmfu_user_markup_preview" version_id="4" version_string="1.0.1"><![CDATA[User Markup Preview]]></phrase>
     <phrase title="3ps_cmfu_user_title" version_id="1" version_string="1.0.0"><![CDATA[User Title]]></phrase>
     <phrase title="3ps_cmfu_x_background_and_borders" version_id="1" version_string="1.0.0"><![CDATA[Background And Borders]]></phrase>
     <phrase title="3ps_cmfu_x_colour" version_id="1" version_string="1.0.0"><![CDATA[{title} colour]]></phrase>
@@ -648,6 +759,7 @@ value</sub_options>
     <phrase title="3ps_cmfu_x_markup" version_id="1" version_string="1.0.0"><![CDATA[{title} Markup]]></phrase>
     <phrase title="3ps_cmfu_x_text_effects" version_id="1" version_string="1.0.0"><![CDATA[{title} Font Effects]]></phrase>
     <phrase title="3ps_cmfu_your_current_x_markup" version_id="1" version_string="1.0.0"><![CDATA[Your current {title} markup]]></phrase>
+    <phrase title="admin_navigation_3ps_cmfu_presets" version_id="4" version_string="1.0.1"><![CDATA[Custom User Markup Presets]]></phrase>
     <phrase title="option_3ps_cmfu_displayCreditNotice" version_id="3" version_string="1.0.0"><![CDATA[Display credit notice in footer]]></phrase>
     <phrase title="option_3ps_cmfu_displayCreditNotice_explain" version_id="3" version_string="1.0.0"><![CDATA[Whether to display an one-line credit notice on your forum's footer, under the standard XenForo copyright notice.<br />
 Please support me by always keeping this box checked. This notice will not display the add-on version. It is fine if you uncheck this option.<br /><br />
@@ -690,7 +802,11 @@ Please support me by always keeping this box checked. This notice will not displ
     <phrase title="permission_interface_3ps_cumfu_username" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - Username Markup Permissions]]></phrase>
     <phrase title="permission_interface_3ps_cumfu_user_title" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - User Title Markup Permissions]]></phrase>
   </phrases>
-  <route_prefixes/>
+  <route_prefixes>
+    <route_type type="admin">
+      <prefix original_prefix="3ps-cmfu" class="ThreePointStudio_CustomMarkupForUser_Route_PrefixAdmin_CMFU" build_link="data_only"/>
+    </route_type>
+  </route_prefixes>
   <style_properties/>
   <templates>
     <template title="3ps_cmfu.js" version_id="3" version_string="1.0.0"><![CDATA[<script type="text/javascript">
@@ -1236,4 +1352,5 @@ $(function () {
     </modification>
   </public_template_modifications>
   <bb_code_media_sites/>
+  <bb_codes/>
 </addon>
