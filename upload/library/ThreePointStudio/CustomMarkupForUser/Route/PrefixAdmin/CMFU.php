@@ -9,6 +9,7 @@ class ThreePointStudio_CustomMarkupForUser_Route_PrefixAdmin_CMFU implements Xen
     protected $_subComponents = array(
         'presets' => array(
             'intId' => 'preset_id',
+            'title' => 'title',
             'actionPrefix' => 'presets'
         )
     );
