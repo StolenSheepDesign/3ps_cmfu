@@ -82,6 +82,22 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_CMFU extends XenForo_
         );
     }
 
+    public function actionPresetsDelete() {
+        if ($this->isConfirmedPost()) {
+            return $this->_deleteData(
+                'ThreePointStudio_CustomMarkupForUser_DataWriter_Preset', 'preset_id',
+                XenForo_Link::buildAdminLink('3ps-cmfu/presets')
+            );
+        } else { // show confirmation dialog
+            $presetID = $this->_input->filterSingle('preset_id', XenForo_Input::UINT);
+
+            $viewParams = array(
+                'preset' => $this->_getPresetOrError($presetID)
+            );
+            return $this->responseView('ThreePointStudio_CustomMarkupForUser_ViewAdmin_Preset_Delete', '3ps_cmfu_presets_delete', $viewParams);
+        }
+    }
+
     protected function _getPresetAddEditResponse($templateName, array $preset = null, $user = null) {
         if (!$user) {
             $user = XenForo_Visitor::getInstance()->toArray();
