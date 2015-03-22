@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="3psCMFU" title="[3.studIo] Custom Markup For Users" version_string="1.0.1" version_id="4" url="http://xenforo.com/community/resources/3-studio-custom-markup-for-users.1958/" install_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" install_callback_method="install" uninstall_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="3psCMFU" title="[3.studIo] Custom Markup For Users" version_string="1.1.0" version_id="5" url="http://xenforo.com/community/resources/3-studio-custom-markup-for-users.1958/" install_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" install_callback_method="install" uninstall_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="3ps_cmfu_presets" parent_navigation_id="userCustomization" display_order="1" link="3ps-cmfu/presets" admin_permission_id="" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -547,19 +547,19 @@ $(function () {
 	<xen:textboxunit label="{xen:phrase title}:" name="title" value="{$preset.title}" data-livetitletemplate="{xen:if {$preset.preset_id},
 		'{xen:phrase 3ps_cmfu_edit_preset}: <em>%s</em>',
 		'{xen:phrase 3ps_cmfu_add_new_preset}: <em>%s</em>'}" />
-
-	<xen:checkboxunit label="">
-		<xen:option name="active" selected="{$preset.active}">{xen:phrase 3ps_cmfu_preset_is_active}</xen:option>
+	
+	<xen:checkboxunit label="{xen:phrase 3ps_cmfu_enable_preset_for}" class="checkboxColumns">
+		<xen:option name="enable_for[username]" selected="{$preset.enable_for[username]}">{xen:phrase user_name}</xen:option>
+		<xen:option name="enable_for[usertitle]" selected="{$preset.enable_for[usertitle]}">{xen:phrase 3ps_cmfu_user_title}</xen:option>
 	</xen:checkboxunit>
 	
 	<xen:checkboxunit label="{xen:phrase 3ps_cmfu_enable_preset_for_user_group}:" name="user_groups" class="checkboxColumns">
 		<xen:options source="$userGroups" />
 	</xen:checkboxunit>
 	
-	{xen:raw $optionsHTML}
+	<xen:include template="3ps_cmfu_cmcontrol_preset"></xen:include>
 
 	<input type="hidden" name="preset_id" value="{$preset.preset_id}" />
-
 	<xen:submitunit save="{xen:phrase 3ps_cmfu_save_preset}"></xen:submitunit>
 </xen:form>]]></template>
     <template title="3ps_cmfu_presets_list"><![CDATA[<xen:title>{xen:phrase 3ps_cmfu_custom_user_markup_presets}</xen:title>
@@ -727,6 +727,7 @@ value</sub_options>
     <phrase title="3ps_cmfu_custom_user_markup_presets" version_id="4" version_string="1.0.1"><![CDATA[Custom User Markup Presets]]></phrase>
     <phrase title="3ps_cmfu_delete_preset" version_id="4" version_string="1.0.1"><![CDATA[Delete Preset]]></phrase>
     <phrase title="3ps_cmfu_edit_preset" version_id="4" version_string="1.0.1"><![CDATA[Edit Preset]]></phrase>
+    <phrase title="3ps_cmfu_enable_preset_for" version_id="4" version_string="1.0.1"><![CDATA[Enable preset for]]></phrase>
     <phrase title="3ps_cmfu_enable_preset_for_user_group" version_id="4" version_string="1.0.1"><![CDATA[Enable this preset for these user groups]]></phrase>
     <phrase title="3ps_cmfu_enable_x_background_colour" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} background colour]]></phrase>
     <phrase title="3ps_cmfu_enable_x_border" version_id="1" version_string="1.0.0"><![CDATA[Enable {title} border]]></phrase>
@@ -739,6 +740,7 @@ value</sub_options>
     <phrase title="3ps_cmfu_overline_option_selection_invalid" version_id="1" version_string="1.0.0"><![CDATA[Overline option selection invalid.]]></phrase>
     <phrase title="3ps_cmfu_overline_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: overline;">Overline</span> {title}]]></phrase>
     <phrase title="3ps_cmfu_please_confirm_that_you_want_to_delete_following_preset" version_id="4" version_string="1.0.1"><![CDATA[Please confirm that you want to delete the following preset]]></phrase>
+    <phrase title="3ps_cmfu_preset" version_id="4" version_string="1.0.1"><![CDATA[Preset]]></phrase>
     <phrase title="3ps_cmfu_presets" version_id="4" version_string="1.0.1"><![CDATA[Presets]]></phrase>
     <phrase title="3ps_cmfu_presets_list" version_id="4" version_string="1.0.1"><![CDATA[Custom Markup Presets]]></phrase>
     <phrase title="3ps_cmfu_preset_is_active" version_id="4" version_string="1.0.1"><![CDATA[Preset is active]]></phrase>

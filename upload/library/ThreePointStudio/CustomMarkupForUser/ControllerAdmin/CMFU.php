@@ -32,7 +32,7 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_CMFU extends XenForo_
         $preset_id = $this->_input->filterSingle("preset_id", XenForo_Input::UINT);
         $dwInput = $this->_input->filter(array(
             "title" => XenForo_Input::STRING,
-            "active" => XenForo_Input::BOOLEAN,
+            "enable_for" => XenForo_Input::ARRAY_SIMPLE,
             "user_groups" => array(XenForo_Input::UINT, 'array' => true)
         ));
 
@@ -68,6 +68,7 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_CMFU extends XenForo_
 
         $dwInput["config"] = serialize($options);
         $dwInput["user_groups"] = serialize($dwInput["user_groups"]);
+        $dwInput["enable_for"] = serialize($dwInput["enable_for"]);
 
         $dw = XenForo_DataWriter::create('ThreePointStudio_CustomMarkupForUser_DataWriter_Preset');
         if ($preset_id) {
@@ -98,45 +99,26 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_CMFU extends XenForo_
         }
     }
 
-    protected function _getPresetAddEditResponse($templateName, array $preset = null, $user = null) {
-        if (!$user) {
-            $user = XenForo_Visitor::getInstance()->toArray();
-        }
-        if (empty($user["custom_title"])) {
-            // No user title
-            $user["custom_title"] = "(No Custom Title Set)";
-        }
+    protected function _getPresetAddEditResponse($templateName, array $preset = null) {
         if (!$preset["config"]) {
-            $options = serialize(ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray);
+            $options = serialize(array("preset" => array()));
         } else {
             $options = $preset["config"];
         }
         $options = ThreePointStudio_CustomMarkupForUser_Helpers::prepareSerializedOptionsForView($options);
-        $renderHTML = "";
 
-        $settingsTemplate = new XenForo_Template_Admin($templateName, array_merge(array(
-            "title" => new XenForo_Phrase("user_name"),
-            "titleCode" => "username",
-            "userOptions" => $options["username"],
-            "currentMarkupRender" => XenForo_Template_Helper_Core::callHelper("usernamehtml", array($user, "Username", true))
-        ), $this->_getBaseViewParams()));
-        $settingsTemplate->setLanguageId(1);
-        $renderHTML .= $settingsTemplate->render();
-
-        // Render user title
-        $settingsTemplate = new XenForo_Template_Admin($templateName, array_merge(array(
-            "title" => new XenForo_Phrase("3ps_cmfu_user_title"),
-            "titleCode" => "usertitle",
-            "userOptions" => $options["usertitle"],
-            "currentMarkupRender" => XenForo_Template_Helper_Core::callHelper("usertitle", array($user, true))
-        ), $this->_getBaseViewParams()));
-        $settingsTemplate->setLanguageId(1);
-        $renderHTML .= $settingsTemplate->render();
+        $user = XenForo_Visitor::getInstance()->toArray();
+        $html = str_replace("{inner}", $user["username"], ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "preset"));
 
         $viewParams = array(
-            "optionsHTML" => $renderHTML,
             "userGroups" => $this->_getUserGroupModel()->getAllUserGroupTitles(),
-            "preset" => $preset
+            "preset" => $preset,
+            "title" => new XenForo_Phrase("3ps_cmfu_preset"),
+            "titleCode" => "preset",
+            "userOptions" => $options["preset"],
+            "currentMarkupRender" => $html,
+            "fontList" => ThreePointStudio_CustomMarkupForUser_Constants::$fontList,
+            "borderList" => ThreePointStudio_CustomMarkupForUser_Constants::$borderList,
         );
         return $this->responseView('ThreePointStudio_CustomMarkupForUser_ViewAdmin_Presets', '3ps_cmfu_presets_edit', $viewParams);
     }

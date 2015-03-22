@@ -13,6 +13,15 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
             $db->query("ALTER TABLE `xf_user`
                         ADD COLUMN  `3ps_cmfu_options` BLOB NULL AFTER `is_staff`,
                         ADD COLUMN `3ps_cmfu_render_cache` BLOB NULL AFTER `3ps_cmfu_options`");
+            $db->query("CREATE TABLE IF NOT EXISTS `3ps_cmfu_presets` (
+                      `preset_id` bigint(20) unsigned NOT NULL,
+                      `title` text CHARACTER SET latin1 NOT NULL,
+                      `enable_for` text CHARACTER SET latin1 NOT NULL,
+                      `config` text CHARACTER SET latin1 NOT NULL,
+                      `user_groups` text CHARACTER SET latin1 NOT NULL
+                    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+                ");
+            $db->query("ALTER TABLE `3ps_cmfu_presets` ADD UNIQUE KEY `preset_id` (`preset_id`);");
         }
         if ($version > 0) { // Upgrade section
             if ($version < 3) { // 1.0.0 Beta 1 - 1.0.0
@@ -25,6 +34,18 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
                     CHANGE `3ps_cmfu_render_cache` `3ps_cmfu_render_cache` BLOB NULL
                 ");
             }
+
+            if ($version < 5) { // 1.1.0
+                $db->query("CREATE TABLE IF NOT EXISTS `3ps_cmfu_presets` (
+                      `preset_id` bigint(20) unsigned NOT NULL,
+                      `title` text CHARACTER SET latin1 NOT NULL,
+                      `enable_for` text CHARACTER SET latin1 NOT NULL,
+                      `config` text CHARACTER SET latin1 NOT NULL,
+                      `user_groups` text CHARACTER SET latin1 NOT NULL
+                    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+                ");
+                $db->query("ALTER TABLE `3ps_cmfu_presets` ADD UNIQUE KEY `preset_id` (`preset_id`);");
+            }
         }
     }
 
@@ -33,5 +54,6 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
         $db->query("ALTER TABLE `xf_user`
                     DROP COLUMN `3ps_cmfu_options`,
                     DROP COLUMN `3ps_cmfu_render_cache`");
+        $db->query("DROP TABLE IF EXISTS `3ps_cmfu_presets`");
     }
 }

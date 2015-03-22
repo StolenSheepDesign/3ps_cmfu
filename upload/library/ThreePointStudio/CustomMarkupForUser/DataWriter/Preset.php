@@ -16,9 +16,9 @@ class ThreePointStudio_CustomMarkupForUser_DataWriter_Preset extends XenForo_Dat
                 'type' => self::TYPE_STRING,
                 'default' => ""
             ),
-            "active" => array(
-                'type' => self::TYPE_BOOLEAN,
-                'default' => 1
+            "enable_for" => array(
+                'type' => self::TYPE_SERIALIZED,
+                'default' => ''
             ),
             "config" => array(
                 'type' => self::TYPE_SERIALIZED,
