@@ -1,0 +1,20 @@
+{
+  "name": "cmfu",
+  "version": "1.0.2-b1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tyteen4a03/3ps_cmfu"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib-copy": "~0.4.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-newer": "~1.1.0",
+    "grunt-sync": "~0.0.6",
+    "load-grunt-tasks": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  }
+}
