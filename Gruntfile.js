@@ -28,6 +28,7 @@ module.exports = function (grunt) {
         sync: {
             main: {
                 files: [{
+                    expand: true,
                     cwd: '<%= config.app %>',
                     src: [
                         '**'
@@ -58,7 +59,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build', [
-        'newer:copy:dist'
+        'copy:dist'
     ]);
 
     grunt.registerTask('default', [
