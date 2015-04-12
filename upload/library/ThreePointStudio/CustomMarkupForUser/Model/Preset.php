@@ -7,11 +7,11 @@
 
 class ThreePointStudio_CustomMarkupForUser_Model_Preset extends XenForo_Model {
     public function getPresetById($id) {
-        return $this->_getDb()->fetchRow('SELECT * FROM 3ps_cmfu_presets WHERE preset_id = ?', $id);
+        return $this->_getDb()->fetchRow('SELECT * FROM xf_3ps_cmfu_presets WHERE preset_id = ?', $id);
     }
 
     public function getAllPresets() {
-        return $this->fetchAllKeyed('SELECT * FROM 3ps_cmfu_presets ORDER BY preset_id', 'preset_id');
+        return $this->fetchAllKeyed('SELECT * FROM xf_3ps_cmfu_presets ORDER BY preset_id', 'preset_id');
     }
 
     public function addNewPreset() {

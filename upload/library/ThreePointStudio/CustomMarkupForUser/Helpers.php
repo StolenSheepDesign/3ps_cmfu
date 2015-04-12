@@ -280,6 +280,7 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
         if (!$fullUserOptions) {
             $fullUserOptions = ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray;
         }
+
         foreach ($fullUserOptions as $category => $catArray) {
             foreach ($catArray as $itemName => $itemValue) {
                 if (isset(ThreePointStudio_CustomMarkupForUser_Constants::$availableMarkups[$itemName]["enable_prefix"])) { // This item has an enable_ marker, tick it as well

@@ -7,7 +7,7 @@
 
 class ThreePointStudio_CustomMarkupForUser_DataWriter_Preset extends XenForo_DataWriter {
     var $fields = array(
-        "3ps_cmfu_presets" => array(
+        "xf_3ps_cmfu_presets" => array(
             "preset_id" => array(
                 'type' => self::TYPE_UINT,
                 'autoIncrement' => true
@@ -39,7 +39,7 @@ class ThreePointStudio_CustomMarkupForUser_DataWriter_Preset extends XenForo_Dat
         if (!$id = $this->_getExistingPrimaryKey($data, 'preset_id')) {
             return false;
         }
-        return array('3ps_cmfu_presets' => $this->_getPresetModel()->getPresetById($id));
+        return array('xf_3ps_cmfu_presets' => $this->_getPresetModel()->getPresetById($id));
     }
 
     protected function _getUpdateCondition($tableName) {
