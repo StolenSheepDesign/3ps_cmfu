@@ -27,7 +27,7 @@ class ThreePointStudio_CustomMarkupForUser_Route_PrefixAdmin_CMFU implements Xen
             $action = $router->resolveActionWithIntegerParam($routePath, $request, 'preset_id');
         }
 
-        return $router->getRouteMatch($controller, $action, '3ps_cmfu');
+        return $router->getRouteMatch($controller, $action, 'users', '3ps-cmfu/');
     }
 
     /**

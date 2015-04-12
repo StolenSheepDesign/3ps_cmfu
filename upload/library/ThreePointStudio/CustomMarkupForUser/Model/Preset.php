@@ -23,6 +23,20 @@ class ThreePointStudio_CustomMarkupForUser_Model_Preset extends XenForo_Model {
     public function updatePresetById($id) {
         $dw = XenForo_DataWriter::create("ThreePointStudio_CustomMarkupForUser_DataWriter_Preset");
         $dw->setExistingData($id);
+    }
 
+    /**
+     * Gets presets that are enabled for x group.
+     */
+    public function getPresetsByGroup($group) {
+        $allPresets = $this->getAllPresets();
+        $toReturn = array();
+        foreach ($allPresets as $preset) {
+            $enable_for = unserialize($preset["enable_for"]);
+            if ($enable_for[$group]) {
+                $toReturn[(int) $preset["preset_id"]] = $preset;
+            }
+        }
+        return $toReturn;
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <addon addon_id="3psCMFU" title="[3.studIo] Custom Markup For Users" version_string="1.1.0" version_id="5" url="http://xenforo.com/community/resources/3-studio-custom-markup-for-users.1958/" install_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" install_callback_method="install" uninstall_callback_class="ThreePointStudio_CustomMarkupForUser_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
-    <navigation navigation_id="3ps_cmfu_presets" parent_navigation_id="userCustomization" display_order="1" link="3ps-cmfu/presets" admin_permission_id="" debug_only="0" hide_no_children="0"/>
+    <navigation navigation_id="3ps_cmfu_presets" parent_navigation_id="userCustomization" display_order="1" link="3ps-cmfu/presets" admin_permission_id="user" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
   <admin_permissions/>
   <admin_style_properties/>
@@ -139,7 +139,8 @@ $(function () {
     <template title="3ps_cmfu_cmcontrol"><![CDATA[<h3 class="sectionHeader">{xen:phrase 3ps_cmfu_x_markup, 'title={$title}'}</h3>
 <xen:include template="3ps_cmfu_options_current_markup_user" />
 <xen:include template="3ps_cmfu_options_text_effects" />
-<xen:include template="3ps_cmfu_options_backgrounds_borders" />]]></template>
+<xen:include template="3ps_cmfu_options_backgrounds_borders" />
+{xen:raw $presetsHTML}]]></template>
     <template title="3ps_cmfu_cmcontrol_preset"><![CDATA[<h3 class="sectionHeader">{xen:phrase 3ps_cmfu_x_markup, 'title={$title}'}</h3>
 <xen:include template="3ps_cmfu_options_current_markup_preview" />
 <xen:include template="3ps_cmfu_options_text_effects" />
@@ -450,6 +451,18 @@ $(function () {
     <dt>{xen:phrase 3ps_cmfu_users_current_x_markup, 'title={$title}'}</dt>
     <dd id="currentMarkup_{$titleCode}">{xen:raw $currentMarkupRender}</dd>
 </dl>]]></template>
+    <template title="3ps_cmfu_options_presets_list"><![CDATA[<xen:if is="{$presets}">
+<dl class="ctrlUnit">
+	<dt>{xen:phrase 3ps_cmfu_use_these_x_presets, 'title={$title}'}</dt>
+	<dd>
+		<ul>
+		<xen:foreach loop="$presets" key="$presetId" value="$preset">
+			<li><label for="ctrl_preset_{$presetId}"><input type="checkbox" name="3ps_cmfu_options[{$titleCode}][presets][]" value="{$presetId}" id="ctrl_preset_{$presetId}"{xen:checked {$preset.checked}}> {$preset.label}</label></li>
+		</xen:foreach>
+        </ul>
+	</dd>
+</dl>
+</xen:if>]]></template>
     <template title="3ps_cmfu_options_text_effects"><![CDATA[<xen:require css="3ps_cmfu_colorpicker.css" />
 <xen:require js="js/3ps/cmfu/colorpicker.js" />
 <xen:include template="3ps_cmfu.js" />
@@ -539,7 +552,12 @@ $(function () {
 
 <xen:if is="{$preset.preset_id}">
 	<xen:navigation>
+		<xen:breadcrumb href="{xen:adminlink 3ps-cmfu/presets}">{xen:phrase 3ps_cmfu_custom_user_markup_presets}</xen:breadcrumb>
 		<xen:breadcrumb href="{xen:adminlink 3ps-cmfu/presets}#{xen:helper listitemid, $preset.preset_id}">{$preset.title}</xen:breadcrumb>
+	</xen:navigation>
+<xen:else />
+	<xen:navigation>
+		<xen:breadcrumb href="{xen:adminlink 3ps-cmfu/presets}">{xen:phrase 3ps_cmfu_custom_user_markup_presets}</xen:breadcrumb>
 	</xen:navigation>
 </xen:if>
 
@@ -549,8 +567,8 @@ $(function () {
 		'{xen:phrase 3ps_cmfu_add_new_preset}: <em>%s</em>'}" />
 	
 	<xen:checkboxunit label="{xen:phrase 3ps_cmfu_enable_preset_for}" class="checkboxColumns">
-		<xen:option name="enable_for[username]" selected="{$preset.enable_for[username]}">{xen:phrase user_name}</xen:option>
-		<xen:option name="enable_for[usertitle]" selected="{$preset.enable_for[usertitle]}">{xen:phrase 3ps_cmfu_user_title}</xen:option>
+		<xen:option name="enable_for[username]" selected="{$preset.enable_for.username}">{xen:phrase user_name}</xen:option>
+		<xen:option name="enable_for[usertitle]" selected="{$preset.enable_for.usertitle}">{xen:phrase 3ps_cmfu_user_title}</xen:option>
 	</xen:checkboxunit>
 	
 	<xen:checkboxunit label="{xen:phrase 3ps_cmfu_enable_preset_for_user_group}:" name="user_groups" class="checkboxColumns">
@@ -567,6 +585,10 @@ $(function () {
 <xen:topctrl>
 	<a href="{xen:adminlink '3ps-cmfu/presets/add'}" class="button">+ {xen:phrase 3ps_cmfu_add_new_preset}</a>
 </xen:topctrl>
+
+<xen:navigation>
+		<xen:breadcrumb href="{xen:adminlink 3ps-cmfu/presets}">{xen:phrase 3ps_cmfu_custom_user_markup_presets}</xen:breadcrumb>
+</xen:navigation>
 
 <xen:require css="filter_list.css" />
 <xen:require js="js/xenforo/filter_list.js" />
@@ -629,10 +651,10 @@ $(function () {
     <listener event_id="load_class" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassDataWriter" active="1" hint="XenForo_DataWriter_User" description="XenForo_DataWriter_User"/>
     <listener event_id="load_class" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassController" active="1" hint="XenForo_ControllerPublic_Account" description="XenForo_ControllerPublic_Account"/>
     <listener event_id="load_class" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_LoadClass" callback_method="loadClassModel" active="1" hint="XenForo_Model_User" description="XenForo_Model_User"/>
-    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="templateHook" active="1" hint="account_preferences_options" description="account_preferences_options"/>
-    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="templateHook" active="1" hint="admin_user_edit_tabs" description="admin_user_edit_tabs"/>
-    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="templateHook" active="1" hint="admin_user_edit_panes" description="admin_user_edit_panes"/>
-    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="templateHook" active="1" hint="footer" description="footer"/>
+    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="accountPreferencesOptions" active="1" hint="account_preferences_options" description="account_preferences_options"/>
+    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="adminUserEditTabs" active="1" hint="admin_user_edit_tabs" description="admin_user_edit_tabs"/>
+    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="adminUserEditPanes" active="1" hint="admin_user_edit_panes" description="admin_user_edit_panes"/>
+    <listener event_id="template_hook" execute_order="10" callback_class="ThreePointStudio_CustomMarkupForUser_Listener_Template" callback_method="footerCredits" active="1" hint="footer" description="footer (credits)"/>
   </code_event_listeners>
   <cron/>
   <email_templates/>
@@ -680,7 +702,7 @@ value</sub_options>
     <permissions>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseBGColourInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="8"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseBGColourInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="9"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseBoldInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="1"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseBoldInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="2"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseBoldInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="2"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderColourInUNM" permission_type="flag" depend_permission_id="canUseBorderInUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="10"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderColourInUTM" permission_type="flag" depend_permission_id="canUseBorderInUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="11"/>
@@ -690,7 +712,7 @@ value</sub_options>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseBorderStyleInUTM" permission_type="flag" depend_permission_id="canUseBorderInUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="12"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseCMFUSystem" permission_type="flag" default_value="unset" interface_group_id="3ps_cumfu_general" display_order="1"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseCustomUNM" permission_type="flag" depend_permission_id="canUseCMFUSystem" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="0"/>
-      <permission permission_group_id="3ps_cmfu" permission_id="canUseCustomUTM" permission_type="flag" depend_permission_id="canUseCMFUSystem" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="1"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseCustomUTM" permission_type="flag" depend_permission_id="canUseCMFUSystem" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="0"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseFontInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="7"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseFontInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="8"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseItalicInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="2"/>
@@ -701,6 +723,8 @@ value</sub_options>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseStrikeInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="5"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseTextColourInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="6"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseTextColourInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="7"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseUNPresets" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="1"/>
+      <permission permission_group_id="3ps_cmfu" permission_id="canUseUTPresets" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="1"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseUnderlineInUNM" permission_type="flag" depend_permission_id="canUseCustomUNM" default_value="unset" interface_group_id="3ps_cumfu_username" display_order="3"/>
       <permission permission_group_id="3ps_cmfu" permission_id="canUseUnderlineInUTM" permission_type="flag" depend_permission_id="canUseCustomUTM" default_value="unset" interface_group_id="3ps_cumfu_user_title" display_order="4"/>
     </permissions>
@@ -725,6 +749,7 @@ value</sub_options>
     <phrase title="3ps_cmfu_credit_notice" version_id="3" version_string="1.0.0"><![CDATA[Custom Markup for User powered by <a href="http://3pointstudio.com">3.studIo</a>. The forum owner is a good person!]]></phrase>
     <phrase title="3ps_cmfu_custom_markup" version_id="1" version_string="1.0.0 Alpha 2"><![CDATA[Custom Markup]]></phrase>
     <phrase title="3ps_cmfu_custom_user_markup_presets" version_id="4" version_string="1.0.1"><![CDATA[Custom User Markup Presets]]></phrase>
+    <phrase title="3ps_cmfu_default_user_group_styling" version_id="5" version_string="1.1.0"><![CDATA[Default User Group Styling]]></phrase>
     <phrase title="3ps_cmfu_delete_preset" version_id="4" version_string="1.0.1"><![CDATA[Delete Preset]]></phrase>
     <phrase title="3ps_cmfu_edit_preset" version_id="4" version_string="1.0.1"><![CDATA[Edit Preset]]></phrase>
     <phrase title="3ps_cmfu_enable_preset_for" version_id="4" version_string="1.0.1"><![CDATA[Enable preset for]]></phrase>
@@ -754,7 +779,10 @@ value</sub_options>
     <phrase title="3ps_cmfu_underline_x" version_id="1" version_string="1.0.0"><![CDATA[<span style="text-decoration: underline;">Underline</span> {title}]]></phrase>
     <phrase title="3ps_cmfu_users_current_x_markup" version_id="1" version_string="1.0.0 Alpha 2"><![CDATA[User's current {title} markup]]></phrase>
     <phrase title="3ps_cmfu_user_markup_preview" version_id="4" version_string="1.0.1"><![CDATA[User Markup Preview]]></phrase>
+    <phrase title="3ps_cmfu_user_presets" version_id="5" version_string="1.1.0"><![CDATA[User Presets]]></phrase>
+    <phrase title="3ps_cmfu_user_styling_options" version_id="5" version_string="1.1.0"><![CDATA[User Styling Options]]></phrase>
     <phrase title="3ps_cmfu_user_title" version_id="1" version_string="1.0.0"><![CDATA[User Title]]></phrase>
+    <phrase title="3ps_cmfu_use_these_x_presets" version_id="5" version_string="1.1.0"><![CDATA[Use these {title} presets]]></phrase>
     <phrase title="3ps_cmfu_x_background_and_borders" version_id="1" version_string="1.0.0"><![CDATA[Background And Borders]]></phrase>
     <phrase title="3ps_cmfu_x_colour" version_id="1" version_string="1.0.0"><![CDATA[{title} colour]]></phrase>
     <phrase title="3ps_cmfu_x_font" version_id="1" version_string="1.0.0"><![CDATA[{title} font]]></phrase>
@@ -785,7 +813,7 @@ Please support me by always keeping this box checked. This notice will not displ
     <phrase title="permission_3ps_cmfu_canUseBorderStyleInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use border style]]></phrase>
     <phrase title="permission_3ps_cmfu_canUseBorderStyleInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use border style]]></phrase>
     <phrase title="permission_3ps_cmfu_canUseCMFUSystem" version_id="1" version_string="1.0.0"><![CDATA[Can use Custom Markup for User System]]></phrase>
-    <phrase title="permission_3ps_cmfu_canUseCustomUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use Custom Username Markup]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseCustomUNM" version_id="5" version_string="1.1.0"><![CDATA[Can use Custom User Name Markup]]></phrase>
     <phrase title="permission_3ps_cmfu_canUseCustomUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use Custom User Title Markup]]></phrase>
     <phrase title="permission_3ps_cmfu_canUseFontInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use custom font]]></phrase>
     <phrase title="permission_3ps_cmfu_canUseFontInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use custom font]]></phrase>
@@ -799,10 +827,12 @@ Please support me by always keeping this box checked. This notice will not displ
     <phrase title="permission_3ps_cmfu_canUseTextColourInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use text colour]]></phrase>
     <phrase title="permission_3ps_cmfu_canUseUnderlineInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use underline]]></phrase>
     <phrase title="permission_3ps_cmfu_canUseUnderlineInUTM" version_id="1" version_string="1.0.0"><![CDATA[Can use underline]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseUNPresets" version_id="5" version_string="1.1.0"><![CDATA[Can use User Name Presets]]></phrase>
+    <phrase title="permission_3ps_cmfu_canUseUTPresets" version_id="5" version_string="1.1.0"><![CDATA[Can use User Title Presets]]></phrase>
     <phrase title="permission_group_3ps_cmfu" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Markup For Users Permissions]]></phrase>
-    <phrase title="permission_interface_3ps_cumfu_general" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - General Permissions]]></phrase>
-    <phrase title="permission_interface_3ps_cumfu_username" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - Username Markup Permissions]]></phrase>
-    <phrase title="permission_interface_3ps_cumfu_user_title" version_id="1" version_string="1.0.0"><![CDATA[[3.studIo] Custom Username Markup For Users - User Title Markup Permissions]]></phrase>
+    <phrase title="permission_interface_3ps_cumfu_general" version_id="5" version_string="1.1.0"><![CDATA[[3.studIo] Custom Markup For Users - General Permissions]]></phrase>
+    <phrase title="permission_interface_3ps_cumfu_username" version_id="5" version_string="1.1.0"><![CDATA[[3.studIo] Custom Markup For Users - User Name Markup Permissions]]></phrase>
+    <phrase title="permission_interface_3ps_cumfu_user_title" version_id="5" version_string="1.1.0"><![CDATA[[3.studIo] Custom Markup For Users - User Title Markup Permissions]]></phrase>
   </phrases>
   <route_prefixes>
     <route_type type="admin">
@@ -1336,11 +1366,11 @@ $(function () {
 }]]></template>
   </templates>
   <public_template_modifications>
-    <modification template="navigation_visitor_tab" modification_key="3ps_cmfu_profile_username_link" description="Apply custom styling to username (with link to profile)" execution_order="10" enabled="0" action="str_replace">
+    <modification template="navigation_visitor_tab" modification_key="3ps_cmfu_profile_username_link" description="Apply custom styling to username (with link to profile)" execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[<h3><a href="{xen:link members, $visitor}" class="concealed" title="{xen:phrase view_your_profile}">{$visitor.username}</a></h3>]]></find>
       <replace><![CDATA[<h3><a href="{xen:link members, $visitor}" class="concealed username" title="{xen:phrase view_your_profile}">{xen:helper richusername, $visitor}</a></h3>]]></replace>
     </modification>
-    <modification template="navigation_visitor_tab" modification_key="3ps_cmfu_top_username_styling" description="Apply custom styling to top username" execution_order="10" enabled="0" action="str_replace">
+    <modification template="navigation_visitor_tab" modification_key="3ps_cmfu_top_username_styling" description="Apply custom styling to top username" execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[{$visitor.username}]]></find>
       <replace><![CDATA[{xen:helper richusername, $visitor}]]></replace>
     </modification>

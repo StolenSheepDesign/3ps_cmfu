@@ -153,49 +153,53 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
         $sortedTags = $firstOccurrence = array();
         $dom = new DOMDocument();
         foreach ($options[$category] as $optionName => $optionValue) {
-            foreach (ThreePointStudio_CustomMarkupForUser_Constants::$availableMarkups[$optionName]["format"] as $tag) {
-                // Replace all placeholders, if necessary
-                if (isset($tag[2]["variableFeed"])) {
-                    foreach ($tag[2]["variableFeed"] as $var) {
-                        $tag[1] = self::replacePlaceholders($var, $tag[1], $optionValue);
-                    }
-                }
-                $firstOccurrence = array_search($tag[0], self::array_column($sortedTags, 0));
-                if ($firstOccurrence !== false) {
-                    $firstOccurrenceTag = &$sortedTags[$firstOccurrence];
-                    // Try to see if we can merge the properties
-                    if (isset($tag[2]["loneTag"]) && $tag[2]["loneTag"]) { // It wants it own tag
-                        $sortedTags[] = $tag;
-                        continue;
-                    }
-                    $intersection = array_keys(array_intersect_key($tag[1], $sortedTags[$firstOccurrence][1]));
-                    if (in_array("style", $intersection)) {
-                        if (isset($tag[2]["mergeProperties"]) && $tag[2]["mergeProperties"]) {
-                            $firstOccurrenceTag[1]["style"] = array_merge_recursive($firstOccurrenceTag[1]["style"], $tag[1]["style"]);
-                        } else {
-                            $firstOccurrenceTag[1]["style"] = array_merge($firstOccurrenceTag[1]["style"], $tag[1]["style"]);
-                        }
-                        unset($tag[1]["style"]);
-                    }
-                    if (in_array("class", $intersection)) {
-                        $firstOccurrenceTag[1]["class"] = array_replace($firstOccurrenceTag[1]["class"], $tag[1]["class"]);
-                        unset($tag[1]["class"]);
-                    }
-
-                    // Try to put anything that is not in the first occurrence tag into the first occurrence tag instead
-                    foreach ($tag[1] as $attr => $attrValue) {
-                        if (!in_array($attr, array_keys($firstOccurrenceTag[1]))) {
-                            $firstOccurrenceTag[1][$attr] = $attrValue;
-                            unset($tag[1][$attr]);
+            if ($optionName == "presets") {
+                $_temp = '';
+            } else {
+                foreach (ThreePointStudio_CustomMarkupForUser_Constants::$availableMarkups[$optionName]["format"] as $tag) {
+                    // Replace all placeholders, if necessary
+                    if (isset($tag[2]["variableFeed"])) {
+                        foreach ($tag[2]["variableFeed"] as $var) {
+                            $tag[1] = self::replacePlaceholders($var, $tag[1], $optionValue);
                         }
                     }
+                    $firstOccurrence = array_search($tag[0], self::array_column($sortedTags, 0));
+                    if ($firstOccurrence !== false) {
+                        $firstOccurrenceTag = &$sortedTags[$firstOccurrence];
+                        // Try to see if we can merge the properties
+                        if (isset($tag[2]["loneTag"]) && $tag[2]["loneTag"]) { // It wants it own tag
+                            $sortedTags[] = $tag;
+                            continue;
+                        }
+                        $intersection = array_keys(array_intersect_key($tag[1], $sortedTags[$firstOccurrence][1]));
+                        if (in_array("style", $intersection)) {
+                            if (isset($tag[2]["mergeProperties"]) && $tag[2]["mergeProperties"]) {
+                                $firstOccurrenceTag[1]["style"] = array_merge_recursive($firstOccurrenceTag[1]["style"], $tag[1]["style"]);
+                            } else {
+                                $firstOccurrenceTag[1]["style"] = array_merge($firstOccurrenceTag[1]["style"], $tag[1]["style"]);
+                            }
+                            unset($tag[1]["style"]);
+                        }
+                        if (in_array("class", $intersection)) {
+                            $firstOccurrenceTag[1]["class"] = array_replace($firstOccurrenceTag[1]["class"], $tag[1]["class"]);
+                            unset($tag[1]["class"]);
+                        }
 
-                    if (!empty($tag[1])) {
-                        // What is left is conflicted attributes. Leave as is in its own tag.
+                        // Try to put anything that is not in the first occurrence tag into the first occurrence tag instead
+                        foreach ($tag[1] as $attr => $attrValue) {
+                            if (!in_array($attr, array_keys($firstOccurrenceTag[1]))) {
+                                $firstOccurrenceTag[1][$attr] = $attrValue;
+                                unset($tag[1][$attr]);
+                            }
+                        }
+
+                        if (!empty($tag[1])) {
+                            // What is left is conflicted attributes. Leave as is in its own tag.
+                            $sortedTags[] = $tag;
+                        }
+                    } else {
                         $sortedTags[] = $tag;
                     }
-                } else {
-                    $sortedTags[] = $tag;
                 }
             }
         }
@@ -262,8 +266,17 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
         return $str;
     }
 
-    public static function prepareSerializedOptionsForView($options) {
-        $fullUserOptions = unserialize($options);
+    /**
+     * Prepares an options array or a serialized options string for checkboxes.
+     *
+     * @param array|string $fullUserOptions The options array or serialized string.
+     * @return array
+     */
+    public static function prepareOptionsForView($fullUserOptions) {
+        if (is_string($fullUserOptions)) {
+            $fullUserOptions = unserialize($fullUserOptions);
+        }
+
         if (!$fullUserOptions) {
             $fullUserOptions = ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray;
         }
@@ -296,5 +309,12 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
     public static function determineVersion() {
         $versionStrSplit = str_split(XenForo_Application::$versionId);
         return strval($versionStrSplit[0] . $versionStrSplit[2]);
+    }
+
+    public static function getBaseViewParams() {
+        return array(
+            "borderList" => ThreePointStudio_CustomMarkupForUser_Helpers::lazyArrayShift(ThreePointStudio_CustomMarkupForUser_Constants::$borderList),
+            "fontList" => ThreePointStudio_CustomMarkupForUser_Helpers::lazyArrayShift(ThreePointStudio_CustomMarkupForUser_Constants::$fontList)
+        );
     }
 }
