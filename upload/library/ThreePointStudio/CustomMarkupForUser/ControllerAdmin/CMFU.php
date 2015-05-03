@@ -98,15 +98,19 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_CMFU extends XenForo_
     }
 
     protected function _getPresetAddEditResponse(array $preset = null) {
-        if (!$preset["config"]) {
-            $options = array("preset" => array());
-        } else {
-            $options = $preset["config"];
-        }
-        $viewOptions = ThreePointStudio_CustomMarkupForUser_Helpers::prepareOptionsForView($options);
-        $preset["enable_for"] = unserialize($preset["enable_for"]);
-        $preset["user_groups"] = unserialize($preset["user_groups"]);
         $user = XenForo_Visitor::getInstance()->toArray();
+        if ($preset == null) {
+            $preset = array(
+                "config" => array("preset" => array()),
+                "enable_for" => ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray,
+                "user_groups" => array(),
+            );
+        } else {
+            $preset["enable_for"] = unserialize($preset["enable_for"]);
+            $preset["user_groups"] = unserialize($preset["user_groups"]);
+        }
+        $options = $preset["config"];
+        $viewOptions = ThreePointStudio_CustomMarkupForUser_Helpers::prepareOptionsForView($options);
         $html = str_replace("{inner}", $user["username"], ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup(unserialize($options), "preset"));
 
         $userGroups = array();
