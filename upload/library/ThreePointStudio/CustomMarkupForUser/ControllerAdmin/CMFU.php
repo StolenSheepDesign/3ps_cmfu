@@ -105,13 +105,14 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_CMFU extends XenForo_
                 "enable_for" => ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray,
                 "user_groups" => array(),
             );
+            $options = $preset["config"];
         } else {
             $preset["enable_for"] = unserialize($preset["enable_for"]);
             $preset["user_groups"] = unserialize($preset["user_groups"]);
+            $options = unserialize($preset["config"]);
         }
-        $options = $preset["config"];
         $viewOptions = ThreePointStudio_CustomMarkupForUser_Helpers::prepareOptionsForView($options);
-        $html = str_replace("{inner}", $user["username"], ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup(unserialize($options), "preset"));
+        $html = str_replace("{inner}", $user["username"], ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "preset"));
 
         $userGroups = array();
         foreach ($this->_getUserGroupModel()->getAllUserGroupTitles() AS $userGroupId => $title) {
