@@ -6,6 +6,12 @@
   <admin_permissions/>
   <admin_style_properties/>
   <admin_templates>
+    <template title="3ps_cmfu.css"><![CDATA[/* Options prettify markup styling order option */ 
+
+.ctrlUnit.markupStylingOrder {
+	margin-top: 0;
+	margin-bottom: 0;
+}]]></template>
     <template title="3ps_cmfu.js"><![CDATA[<script type="text/javascript">
 $(function () {
     var currentMarkupInstance = $('#currentMarkup_{$titleCode}');
@@ -452,16 +458,11 @@ $(function () {
     <dd id="currentMarkup_{$titleCode}">{xen:raw $currentMarkupRender}</dd>
 </dl>]]></template>
     <template title="3ps_cmfu_options_presets_list"><![CDATA[<xen:if is="{$presets}">
-<dl class="ctrlUnit">
-	<dt>{xen:phrase 3ps_cmfu_use_these_x_presets, 'title={$title}'}</dt>
-	<dd>
-		<ul>
-		<xen:foreach loop="$presets" key="$presetId" value="$preset">
-			<li><label for="ctrl_preset_{$presetId}"><input type="checkbox" name="3ps_cmfu_options[{$titleCode}][presets][]" value="{$presetId}" id="ctrl_preset_{$presetId}"{xen:checked {$preset.checked}}> {$preset.label}</label></li>
-		</xen:foreach>
-        </ul>
-	</dd>
-</dl>
+
+<xen:checkboxunit label="{xen:phrase 3ps_cmfu_use_these_x_presets, 'title={$title}'}:" name="3ps_cmfu_options[{$titleCode}][presets]" class="checkboxColumns">
+	<xen:options source="$presets" />
+</xen:checkboxunit>
+
 </xen:if>]]></template>
     <template title="3ps_cmfu_options_text_effects"><![CDATA[<xen:require css="3ps_cmfu_colorpicker.css" />
 <xen:require js="js/3ps/cmfu/colorpicker.js" />
@@ -575,6 +576,8 @@ $(function () {
 		<xen:options source="$userGroups" />
 	</xen:checkboxunit>
 	
+	<xen:spinboxunit label="{xen:phrase display_styling_priority}:" name="display_style_priority" value="{$preset.display_style_priority}" min="0"/>
+	
 	<xen:include template="3ps_cmfu_cmcontrol_preset"></xen:include>
 
 	<input type="hidden" name="preset_id" value="{$preset.preset_id}" />
@@ -619,6 +622,23 @@ $(function () {
     </xen:if>
 </xen:form>]]></template>
     <template title="3ps_cmfu_user_edit_tab"><![CDATA[<li id="tab3psCMFU"><a>{xen:phrase 3ps_cmfu_custom_markup}</a></li>]]></template>
+    <template title="option_template_3ps_cmfu_markupStylingOrder"><![CDATA[<xen:require css="3ps_cmfu.css" />
+
+<xen:controlunit label="{$preparedOption.title}" hint="{$preparedOption.hint}">
+	<xen:explain>{xen:raw $preparedOption.explain}</xen:explain>
+	<xen:html>
+		<dl class="ctrlUnit markupStylingOrder">
+			<dt>{xen:phrase 3ps_cmfu_default_user_group_styling}:</dt>
+			<dd><xen:spinbox name="{$fieldPrefix}[{$preparedOption.option_id}][default]" value="{$preparedOption.option_value.default}" inputclass="number" min="0" step="1" size="5" /></dd>
+			<dt>{xen:phrase 3ps_cmfu_user_styling_options}:</dt>
+			<dd><xen:spinbox name="{$fieldPrefix}[{$preparedOption.option_id}][user]" value="{$preparedOption.option_value.user}" inputclass="number" min="0" step="1" size="5" /></dd>
+			<dt>{xen:phrase 3ps_cmfu_user_presets}:</dt>
+			<dd><xen:spinbox name="{$fieldPrefix}[{$preparedOption.option_id}][presets]" value="{$preparedOption.option_value.presets}" inputclass="number" min="0" step="1" size="5" /></dd>
+		</dl>
+		<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+		{xen:raw $editLink}
+	</xen:html>
+</xen:controlunit>]]></template>
   </admin_templates>
   <admin_template_modifications>
     <modification template="tools_rebuild" modification_key="3ps_cmfu_tools_rebuild" description="Cache rebuilding" execution_order="10" enabled="1" action="str_replace">
@@ -667,6 +687,14 @@ $(function () {
       <sub_options></sub_options>
       <relation group_id="3ps_cmfu" display_order="4"/>
     </option>
+    <option option_id="3ps_cmfu_markupStylingOrder" edit_format="template" data_type="array" can_backup="1">
+      <default_value>a:3:{i:0;s:7:"default";i:1;s:4:"user";i:3;s:7:"presets";i:2;}</default_value>
+      <edit_format_params>option_template_3ps_cmfu_markupStylingOrder</edit_format_params>
+      <sub_options>default
+user
+presets</sub_options>
+      <relation group_id="3ps_cmfu" display_order="3"/>
+    </option>
     <option option_id="3ps_cmfu_overridePlainUsernameHelper" edit_format="onoff" data_type="boolean" can_backup="1">
       <default_value>0</default_value>
       <edit_format_params></edit_format_params>
@@ -678,14 +706,6 @@ $(function () {
       <edit_format_params></edit_format_params>
       <sub_options></sub_options>
       <relation group_id="3ps_cmfu" display_order="2"/>
-    </option>
-    <option option_id="3ps_cmfu_usernameStylingPreference" edit_format="radio" data_type="unsigned_integer" can_backup="1">
-      <default_value>1</default_value>
-      <edit_format_params>0=User Group styling CSS first
-1=Custom Username Markup first
-2=Completely ignore User Group styling CSS</edit_format_params>
-      <sub_options></sub_options>
-      <relation group_id="3ps_cmfu" display_order="3"/>
     </option>
     <option option_id="3ps_usergroup_ranks_max_items_per_row" edit_format="template" data_type="array" can_backup="1">
       <default_value></default_value>
@@ -794,12 +814,12 @@ value</sub_options>
     <phrase title="option_3ps_cmfu_displayCreditNotice_explain" version_id="3" version_string="1.0.0"><![CDATA[Whether to display an one-line credit notice on your forum's footer, under the standard XenForo copyright notice.<br />
 Please support me by always keeping this box checked. This notice will not display the add-on version. It is fine if you uncheck this option.<br /><br />
 <span style="font-size:12px; color: #333; font-weight: bold;">This add-on is released under the BSD 2-Clause modified License.</span> While this option can be turned off, you may <span style="font-size:12px; color: #333; font-weight: bold;">NOT</span> remove the footer comment (invisible, separate from the credit notice) <span style="font-size:12px; color: #333; font-weight: bold;">UNDER ANY CIRCUMSTANCES</span> except with explicit written permission. Not obeying this instruction will be considered as violation of the software license and legal action will be taken.]]></phrase>
+    <phrase title="option_3ps_cmfu_markupStylingOrder" version_id="5" version_string="1.1.0"><![CDATA[Markup Styling Order]]></phrase>
+    <phrase title="option_3ps_cmfu_markupStylingOrder_explain" version_id="5" version_string="1.1.0"><![CDATA[Specify the order of which markup should be applied. 0 means the markup will be ignored.]]></phrase>
     <phrase title="option_3ps_cmfu_overridePlainUsernameHelper" version_id="1" version_string="1.0.0"><![CDATA[Override Plain Username Helper]]></phrase>
     <phrase title="option_3ps_cmfu_overridePlainUsernameHelper_explain" version_id="1" version_string="1.0.0"><![CDATA[Check this option to override the plain username helper as well. This will replace all plain usernames with rich usernames. This is not recommended as plain usernames are there for a reason.]]></phrase>
     <phrase title="option_3ps_cmfu_useCache" version_id="3" version_string="1.0.0"><![CDATA[Use Cache]]></phrase>
     <phrase title="option_3ps_cmfu_useCache_explain" version_id="3" version_string="1.0.0"><![CDATA[Turn on this option to pre-build user markup. Recommended for performance reasons.]]></phrase>
-    <phrase title="option_3ps_cmfu_usernameStylingPreference" version_id="1" version_string="1.0.0"><![CDATA[Username Styling Preference]]></phrase>
-    <phrase title="option_3ps_cmfu_usernameStylingPreference_explain" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="option_group_3ps_cmfu" version_id="3" version_string="1.0.0"><![CDATA[[3.studIo] Custom Markup For Users Options]]></phrase>
     <phrase title="option_group_3ps_cmfu_description" version_id="1" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="permission_3ps_cmfu_canUseBGColourInUNM" version_id="1" version_string="1.0.0"><![CDATA[Can use background colour]]></phrase>
@@ -841,17 +861,16 @@ Please support me by always keeping this box checked. This notice will not displ
   </route_prefixes>
   <style_properties/>
   <templates>
-    <template title="3ps_cmfu.js" version_id="3" version_string="1.0.0"><![CDATA[<script type="text/javascript">
+    <template title="3ps_cmfu.js" version_id="5" version_string="1.1.0"><![CDATA[<script type="text/javascript">
 $(function () {
     var currentMarkupInstance = $('#currentMarkup_{$titleCode}');
 
-    var i;
     var toggleClasses = ['bold', 'italic', 'underline', 'overline', 'strike', 'border'];
     var colourPickerProperties = ['text_colour', 'background_colour', 'border_colour'];
 
-    <xen:comment>
-    for (i = 0; i < toggleClasses.length; ++i) {
-        $('#ctrl_3ps_cmfu_options_{$titleCode}_' + toggleClasses[i]).on('click', function () {
+	<xen:comment>
+    for (var i = 0; i < toggleClasses.length; ++i) {
+        $('#ctrl_3ps_cmfu_options_{$titleCode}_' + toggleClasses[i]).on('change', function () {
             var $this = $(this);
             if ($this.is(':checked')) {
                 currentMarkupInstance.addClass(toggleClasses[i] + "Text");
@@ -863,7 +882,7 @@ $(function () {
         });
     }
 
-    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour').on('click', function () {
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_text_colour').on('change', function () {
         var $this = $(this);
         if ($this.is(':checked')) {
             currentMarkupInstance.css("color", $('#ctrl_3ps_cmfu_options_{$titleCode}_text_colour').val());
@@ -880,7 +899,7 @@ $(function () {
         }
     });
 
-    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face').on('click', function () {
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_font_face').on('change', function () {
         var $this = $(this);
         if ($this.is(':checked')) {
             currentMarkupInstance.css("font-family", $('#ctrl_3ps_cmfu_options_{$titleCode}_font_face').val());
@@ -897,7 +916,7 @@ $(function () {
         }
     });
 
-    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour').on('click', function () {
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_background_colour').on('change', function () {
         var $this = $(this);
         if ($this.is(':checked')) {
             currentMarkupInstance.css("background-color", $('#ctrl_3ps_cmfu_options_{$titleCode}_background_colour').val());
@@ -914,7 +933,7 @@ $(function () {
         }
     });
 
-    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour').on('click', function () {
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_colour').on('change', function () {
         var $this = $(this);
         if ($('#ctrl_3ps_cmfu_options_{$titleCode}_border').is(':checked') && $this.is(':checked')) {
             currentMarkupInstance.css("border-color", $('#ctrl_3ps_cmfu_options_{$titleCode}_border_colour').val());
@@ -931,7 +950,7 @@ $(function () {
         }
     });
 
-    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style').on('click', function () {
+    $('#ctrl_3ps_cmfu_options_{$titleCode}_enable_border_style').on('change', function () {
         var $this = $(this);
         if ($('#ctrl_3ps_cmfu_options_{$titleCode}_border').is(':checked') && $this.is(':checked')) {
             currentMarkupInstance.css("border-style", $('#ctrl_3ps_cmfu_options_{$titleCode}_border_style').val());
@@ -946,7 +965,8 @@ $(function () {
         } else {
             currentMarkupInstance.css("border-style", "inherit");
         }
-    });</xen:comment>
+    });
+	</xen:comment>
 
     function makeColourPicker(name) {
             $('#colorSelector_{$titleCode}_' + name).ColorPicker({
@@ -960,14 +980,13 @@ $(function () {
                 return false;
             },
             onChange: function (hsb, hex, rgb) {
-            	console.log('hey');
                 $('#colorSelectorIndicator_{$titleCode}_' + name).css('backgroundColor', '#' + hex);
                 $('#ctrl_3ps_cmfu_options_{$titleCode}_' + name).val('#' + hex);
             }
         });
     }
 
-    for (i = 0; i < colourPickerProperties.length; ++i) {
+    for (var i = 0; i < colourPickerProperties.length; ++i) {
 	makeColourPicker(colourPickerProperties[i]);
     }
 });

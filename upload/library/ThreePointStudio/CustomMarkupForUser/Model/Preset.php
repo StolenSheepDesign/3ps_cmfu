@@ -10,6 +10,20 @@ class ThreePointStudio_CustomMarkupForUser_Model_Preset extends XenForo_Model {
         return $this->_getDb()->fetchRow('SELECT * FROM xf_3ps_cmfu_presets WHERE preset_id = ?', $id);
     }
 
+    public function getPresetsByIds(array $ids) {
+        return $this->fetchAllKeyed('SELECT * FROM xf_3ps_cmfu_presets WHERE preset_id IN (' . implode(",", $ids) . ') ORDER BY preset_id', 'preset_id');
+    }
+
+    /**
+     * Gets an array of sorted presets.
+     *
+     * @param array $ids
+     * @return array
+     */
+    public function getSortedPresetsByIds(array $ids) {
+        return $this->sortPresetsByStylingPriority($this->getPresetsByIds($ids));
+    }
+
     public function getAllPresets() {
         return $this->fetchAllKeyed('SELECT * FROM xf_3ps_cmfu_presets ORDER BY preset_id', 'preset_id');
     }
@@ -27,6 +41,9 @@ class ThreePointStudio_CustomMarkupForUser_Model_Preset extends XenForo_Model {
 
     /**
      * Gets presets that are enabled for x group.
+     *
+     * @param string $group The group name.
+     * @return array
      */
     public function getPresetsByGroup($group) {
         $allPresets = $this->getAllPresets();
@@ -38,5 +55,18 @@ class ThreePointStudio_CustomMarkupForUser_Model_Preset extends XenForo_Model {
             }
         }
         return $toReturn;
+    }
+
+    /**
+     * Sorts presets by ascending styling order.
+     *
+     * @param array $presets An array of presets.
+     * @return array
+     */
+    protected function sortPresetsByStylingPriority(array &$presets) {
+        usort($presets, function ($a, $b) {
+            return ($a["display_style_priority"] < $b["display_style_priority"] ? -1 : 1);
+        });
+        return $presets;
     }
 }

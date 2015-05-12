@@ -30,6 +30,7 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_CMFU extends XenForo_
         $preset_id = $this->_input->filterSingle("preset_id", XenForo_Input::UINT);
         $dwInput = $this->_input->filter(array(
             "title" => XenForo_Input::STRING,
+            "display_style_priority" => XenForo_Input::UINT,
             "enable_for" => array(XenForo_Input::UINT, 'array' => true),
             "user_groups" => array(XenForo_Input::UINT, 'array' => true)
         ));

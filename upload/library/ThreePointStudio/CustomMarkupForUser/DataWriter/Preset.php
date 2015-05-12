@@ -20,6 +20,10 @@ class ThreePointStudio_CustomMarkupForUser_DataWriter_Preset extends XenForo_Dat
                 'type' => self::TYPE_SERIALIZED,
                 'default' => ''
             ),
+            "display_style_priority" => array(
+                'type' => self::TYPE_UINT,
+                'default' => 0
+            ),
             "config" => array(
                 'type' => self::TYPE_SERIALIZED,
                 'default' => ''
