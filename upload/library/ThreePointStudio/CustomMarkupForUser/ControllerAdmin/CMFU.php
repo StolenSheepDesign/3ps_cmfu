@@ -27,7 +27,12 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_CMFU extends XenForo_
 
     public function actionPresetsSave() {
         $this->_assertPostOnly();
+        /* @var $presetsModel ThreePointStudio_CustomMarkupForUser_Model_Preset */
+        $presetsModel = $this->getModelFromCache("ThreePointStudio_CustomMarkupForUser_Model_Preset");
         $preset_id = $this->_input->filterSingle("preset_id", XenForo_Input::UINT);
+        if (!$preset_id) {
+            $preset_id = 0;
+        }
         $dwInput = $this->_input->filter(array(
             "title" => XenForo_Input::STRING,
             "display_style_priority" => XenForo_Input::UINT,
@@ -68,17 +73,11 @@ class ThreePointStudio_CustomMarkupForUser_ControllerAdmin_CMFU extends XenForo_
         $dwInput["config"] = serialize($options);
         $dwInput["user_groups"] = serialize($dwInput["user_groups"]);
         $dwInput["enable_for"] = serialize($dwInput["enable_for"]);
-
-        $dw = XenForo_DataWriter::create('ThreePointStudio_CustomMarkupForUser_DataWriter_Preset');
-        if ($preset_id) {
-            $dw->setExistingData($preset_id);
-        }
-        $dw->bulkSet($dwInput);
-        $dw->save();
-
+        
+        $preset_id = $presetsModel->updatePreset($preset_id, $dwInput);
         return $this->responseRedirect(
             XenForo_ControllerResponse_Redirect::SUCCESS,
-            XenForo_Link::buildAdminLink('3ps-cmfu/presets') . $this->getLastHash($dw->get('preset_id'))
+            XenForo_Link::buildAdminLink('3ps-cmfu/presets') . $this->getLastHash($preset_id)
         );
     }
 

@@ -28,15 +28,16 @@ class ThreePointStudio_CustomMarkupForUser_Model_Preset extends XenForo_Model {
         return $this->fetchAllKeyed('SELECT * FROM xf_3ps_cmfu_presets ORDER BY preset_id', 'preset_id');
     }
 
-    public function addNewPreset() {
-        $dw = XenForo_DataWriter::create("ThreePointStudio_CustomMarkupForUser_DataWriter_Preset");
-        $dw->save();
-        return $dw->get("preset_id");
-    }
+    public function updatePreset($presetId, array $presetInfo)
+    {
+        $dw = XenForo_DataWriter::create('ThreePointStudio_CustomMarkupForUser_DataWriter_Preset');
+        if ($presetId && $presetId > 0) {
+            $dw->setExistingData($presetId);
+        }
 
-    public function updatePresetById($id) {
-        $dw = XenForo_DataWriter::create("ThreePointStudio_CustomMarkupForUser_DataWriter_Preset");
-        $dw->setExistingData($id);
+        $dw->bulkSet($presetInfo);
+        $dw->save();
+        return $dw->get('preset_id');
     }
 
     /**
