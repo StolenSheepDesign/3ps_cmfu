@@ -25,6 +25,7 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
                 ADD PRIMARY KEY (`preset_id`),
                 ADD UNIQUE KEY `preset_id` (`preset_id`);
             ");
+            $db->query("ALTER TABLE `xf_data_registry` CHANGE `data_key` `data_key` VARBINARY(50) NOT NULL");
         }
         if ($version > 0) { // Upgrade section
             if ($version < 3) { // 1.0.0 Beta 1 - 1.0.0
@@ -53,6 +54,7 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
                   ADD PRIMARY KEY (`preset_id`),
                   ADD UNIQUE KEY `preset_id` (`preset_id`);
                 ");
+                $db->query("ALTER TABLE `xf_data_registry` CHANGE `data_key` `data_key` VARBINARY(50) NOT NULL");
             }
         }
     }
@@ -62,5 +64,6 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
         $db->query("ALTER TABLE `xf_user`
                     DROP COLUMN `3ps_cmfu_options`");
         $db->query("DROP TABLE IF EXISTS `xf_3ps_cmfu_presets`");
+        $db->query("ALTER TABLE `xf_data_registry` CHANGE `data_key` `data_key` VARBINARY(25) NOT NULL");
     }
 }
