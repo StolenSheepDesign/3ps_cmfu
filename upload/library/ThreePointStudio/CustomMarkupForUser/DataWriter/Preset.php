@@ -6,37 +6,36 @@
 */
 
 class ThreePointStudio_CustomMarkupForUser_DataWriter_Preset extends XenForo_DataWriter {
-    var $fields = array(
-        "xf_3ps_cmfu_presets" => array(
-            "preset_id" => array(
-                'type' => self::TYPE_UINT,
-                'autoIncrement' => true
-            ),
-            "title" => array(
-                'type' => self::TYPE_STRING,
-                'default' => ""
-            ),
-            "enable_for" => array(
-                'type' => self::TYPE_SERIALIZED,
-                'default' => ''
-            ),
-            "display_style_priority" => array(
-                'type' => self::TYPE_UINT,
-                'default' => 0
-            ),
-            "config" => array(
-                'type' => self::TYPE_SERIALIZED,
-                'default' => ''
-            ),
-            'user_groups' => array(
-                'type' => self::TYPE_SERIALIZED,
-                'default' => ''
-            )
-        )
-    );
 
     protected function _getFields() {
-        return $this->fields;
+        return array(
+            "xf_3ps_cmfu_presets" => array(
+                "preset_id" => array(
+                    'type' => self::TYPE_UINT,
+                    'autoIncrement' => true,
+                ),
+                "title" => array(
+                    'type' => self::TYPE_STRING,
+                    'default' => ""
+                ),
+                "enable_for" => array(
+                    'type' => self::TYPE_SERIALIZED,
+                    'default' => ''
+                ),
+                "display_style_priority" => array(
+                    'type' => self::TYPE_UINT,
+                    'default' => 0
+                ),
+                "config" => array(
+                    'type' => self::TYPE_SERIALIZED,
+                    'default' => ''
+                ),
+                'user_groups' => array(
+                    'type' => self::TYPE_SERIALIZED,
+                    'default' => ''
+                )
+            )
+        );
     }
 
     protected function _getExistingData($data) {
