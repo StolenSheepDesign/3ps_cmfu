@@ -13,14 +13,18 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
             $db->query("ALTER TABLE `xf_user`
                         ADD COLUMN  `3ps_cmfu_options` BLOB NULL AFTER `is_staff`");
             $db->query("CREATE TABLE IF NOT EXISTS `xf_3ps_cmfu_presets` (
-                      `preset_id` bigint(20) unsigned NOT NULL,
-                      `title` text CHARACTER SET latin1 NOT NULL,
-                      `enable_for` text CHARACTER SET latin1 NOT NULL,
-                      `config` text CHARACTER SET latin1 NOT NULL,
-                      `user_groups` text CHARACTER SET latin1 NOT NULL
-                    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-                ");
-            $db->query("ALTER TABLE `xf_3ps_cmfu_presets` ADD UNIQUE KEY `preset_id` (`preset_id`);");
+                  `preset_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                  `title` text COLLATE utf8_unicode_ci NOT NULL,
+                  `enable_for` text COLLATE utf8_unicode_ci NOT NULL,
+                  `display_style_priority` int(10) unsigned NOT NULL,
+                  `config` text COLLATE utf8_unicode_ci NOT NULL,
+                  `user_groups` text COLLATE utf8_unicode_ci NOT NULL
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+            ");
+            $db->query("ALTER TABLE `xf_3ps_cmfu_presets`
+                ADD PRIMARY KEY (`preset_id`),
+                ADD UNIQUE KEY `preset_id` (`preset_id`);
+            ");
         }
         if ($version > 0) { // Upgrade section
             if ($version < 3) { // 1.0.0 Beta 1 - 1.0.0
@@ -37,14 +41,18 @@ class ThreePointStudio_CustomMarkupForUser_Installer {
             if ($version < 5) { // 1.0.1 - 1.1.0
                 $db->query("ALTER TABLE `xf_user` DROP COLUMN `3ps_cmfu_render_cache`");
                 $db->query("CREATE TABLE IF NOT EXISTS `xf_3ps_cmfu_presets` (
-                      `preset_id` bigint(20) unsigned NOT NULL,
-                      `title` text CHARACTER SET latin1 NOT NULL,
-                      `enable_for` text CHARACTER SET latin1 NOT NULL,
-                      `config` text CHARACTER SET latin1 NOT NULL,
-                      `user_groups` text CHARACTER SET latin1 NOT NULL
-                    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+                    `preset_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `title` text COLLATE utf8_unicode_ci NOT NULL,
+                    `enable_for` text COLLATE utf8_unicode_ci NOT NULL,
+                    `display_style_priority` int(10) unsigned NOT NULL,
+                    `config` text COLLATE utf8_unicode_ci NOT NULL,
+                    `user_groups` text COLLATE utf8_unicode_ci NOT NULL
+                  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
                 ");
-                $db->query("ALTER TABLE `xf_3ps_cmfu_presets` ADD UNIQUE KEY `preset_id` (`preset_id`);");
+                $db->query("ALTER TABLE `xf_3ps_cmfu_presets`
+                  ADD PRIMARY KEY (`preset_id`),
+                  ADD UNIQUE KEY `preset_id` (`preset_id`);
+                ");
             }
         }
     }
