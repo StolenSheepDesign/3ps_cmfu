@@ -60,13 +60,10 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
             XenForo_Model::create("XenForo_Model_User")->insertDefaultCustomMarkup($user["user_id"]);
         }
 
-        $useCache = false;
-        $storeResultsInCache = false;
-        $dr = self::_getDataRegistryModel();
-
         if (empty($user["user_id"])) {
             $html = "{inner}";
         } else {
+            $dr = self::_getDataRegistryModel();
             if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
                 $renderCache = $dr->get("3ps_cmfu_render_cache_" . $user["user_id"] . "_username");
                 if (!empty($renderCache)) {
