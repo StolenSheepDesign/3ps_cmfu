@@ -6,6 +6,8 @@
 */
 
 class ThreePointStudio_CustomMarkupForUser_Helpers {
+    protected static $_modelCache = array();
+
     public static function startsWith($haystack, $needle) {
         return !strncmp($haystack, $needle, strlen($needle));
     }
@@ -145,6 +147,73 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
         return $newArr;
     }
 
+    public static function getCustomMarkupHtml($options, $category, $user, array $extraClasses = array()) {
+        $stylingOrder = array_map('intval', XenForo_Application::getOptions()->get("3ps_cmfu_markupStylingOrder"));
+
+        $dr = self::_getDataRegistryModel();
+        if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
+            $renderCache = $dr->get("3ps_cmfu_render_cache_" . $user["user_id"] . "_" . $category);
+            if (!empty($renderCache)) {
+                $useCache = true;
+                $storeResultsInCache = false;
+            } else {
+                $useCache = false;
+                $storeResultsInCache = true;
+            }
+        } else {
+            $useCache = false;
+            $storeResultsInCache = false;
+        }
+
+        if (!$useCache) {
+            if (isset($options[$category]["presets"]) && !empty($options[$category]["presets"])) {
+                $presetsModel = self::_getPresetModel();
+                $presetDefs = $presetsModel->getSortedPresetsByIds($options[$category]["presets"]);
+                // Squash prefix as appropriate
+                if ($stylingOrder["preset"] > $stylingOrder["user"]) {
+                    // Preset wins
+                    foreach ($presetDefs as $preset) {
+                        $config = unserialize($preset["config"]);
+                        $options[$category] = array_merge($options[$category], $config["preset"]);
+                    }
+                } else {
+                    // User wins
+                    // Squash all prefixes
+                    $finalPresetsDefs = array();
+                    foreach ($presetDefs as $preset) {
+                        $config = unserialize($preset["config"]);
+                        $finalPresetsDefs = array_merge($finalPresetsDefs, $config["preset"]);
+                    }
+                    // Apply it onto options
+                    $options[$category] = array_merge($finalPresetsDefs, $options[$category]);
+                }
+                unset($options[$category]["presets"]);
+            }
+
+            $insertBefore = false;
+            if ($stylingOrder["default"] > 0) {
+                if ($stylingOrder["preset"] > $stylingOrder["user"]) {
+                    if ($stylingOrder["default"] > $stylingOrder["preset"]) {
+                        $insertBefore = true;
+                    }
+                } else {
+                    if ($stylingOrder["default"] > $stylingOrder["user"]) {
+                        $insertBefore = true;
+                    }
+                }
+            }
+            $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, $category, $extraClasses, $insertBefore);
+        } else {
+            $html = $renderCache;
+        }
+
+        if ($storeResultsInCache) {
+            $dr->set("3ps_cmfu_render_cache_" . $user["user_id"] . "_" . $category, $html);
+        }
+
+        return $html;
+    }
+
     public static function assembleCustomMarkup($options, $category, array $extraClasses = array(), $insertBefore = false) {
         if (!isset($options[$category]) || empty($options[$category])) { // No styling option set
             return "{inner}";
@@ -276,6 +345,7 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
                 $finalPermissions["_" . $markupArray["category"]] = true;
             }
         }
+        $finalPermissions["presets"] = $visitor->hasPermission("3ps_cmfu", sprintf("canUse%sPresets", $titleCode));
         return $finalPermissions;
     }
 
@@ -345,5 +415,30 @@ class ThreePointStudio_CustomMarkupForUser_Helpers {
             "borderList" => ThreePointStudio_CustomMarkupForUser_Helpers::lazyArrayShift(ThreePointStudio_CustomMarkupForUser_Constants::$borderList),
             "fontList" => ThreePointStudio_CustomMarkupForUser_Helpers::lazyArrayShift(ThreePointStudio_CustomMarkupForUser_Constants::$fontList)
         );
+    }
+
+    protected static function _getPresetModel() {
+        /* @return ThreePointStudio_CustomMarkupForUser_Model_Preset */
+        return self::getModelFromCache("ThreePointStudio_CustomMarkupForUser_Model_Preset");
+    }
+
+    protected static function _getDataRegistryModel() {
+        /* @return XenForo_Model_DataRegistry */
+        return self::getModelFromCache("XenForo_Model_DataRegistry");
+    }
+
+    /**
+     * Gets the specified model object from the cache. If it does not exist,
+     * it will be instantiated.
+     *
+     * @param string $class Name of the class to load
+     *
+     * @return XenForo_Model
+     */
+    protected static function getModelFromCache($class) {
+        if (!isset(self::$_modelCache[$class])) {
+            self::$_modelCache[$class] = XenForo_Model::create($class);
+        }
+        return self::$_modelCache[$class];
     }
 }

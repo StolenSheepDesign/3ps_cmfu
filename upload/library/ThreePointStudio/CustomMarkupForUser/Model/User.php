@@ -11,24 +11,17 @@ class ThreePointStudio_CustomMarkupForUser_Model_User extends XFCP_ThreePointStu
         $options = unserialize($user["3ps_cmfu_options"]);
         /* @var $dr XenForo_Model_DataRegistry */
         $dr = self::create("XenForo_Model_DataRegistry");
-        $renderCaches = array();
-        foreach (ThreePointStudio_CustomMarkupForUser_Constants::$categories as $category) {
-            $renderCaches[$category] = $dr->get("3ps_cmfu_render_cache_" . $userId . "_" . $category);
-        }
+        $extraClasses = ThreePointStudio_CustomMarkupForUser_TemplateHelpers::getUserExtraClasses($user);
         if ($category) {
             if (!in_array($category, ThreePointStudio_CustomMarkupForUser_Constants::$categories)) {
                 throw new UnexpectedValueException("Unknown category");
             }
-            $renderCaches[$category] = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, $category);
+            $dr->set("3ps_cmfu_render_cache_" . $userId . "_" . $category, ThreePointStudio_CustomMarkupForUser_Helpers::getCustomMarkupHtml($options, $category, $user, (($category == "username" ? $extraClasses : array()))));
         } else {
             foreach (ThreePointStudio_CustomMarkupForUser_Constants::$categories as $category) {
-                $renderCaches[$category] = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, $category);
+                $dr->set("3ps_cmfu_render_cache_" . $userId . "_" . $category, ThreePointStudio_CustomMarkupForUser_Helpers::getCustomMarkupHtml($options, $category, $user, (($category == "username" ? $extraClasses : array()))));
             }
         }
-        foreach (ThreePointStudio_CustomMarkupForUser_Constants::$categories as $category) {
-            $dr->set("3ps_cmfu_render_cache_" . $userId . "_" . $category, $renderCaches[$category]);
-        }
-
     }
 
     public function insertDefaultCustomMarkup($userId) {
