@@ -10,17 +10,43 @@ class ThreePointStudio_CustomMarkupForUser_Listener_Template {
         $visitor = XenForo_Visitor::getInstance();
         if (!$visitor->hasPermission("3ps_cmfu", "canUseCMFUSystem")) return;
         $fullUserOptions = ThreePointStudio_CustomMarkupForUser_Helpers::prepareOptionsForView($visitor["3ps_cmfu_options"]);
+        /* @var $presetModel ThreePointStudio_CustomMarkupForUser_Model_Preset */
+        $presetModel = XenForo_Model::create("ThreePointStudio_CustomMarkupForUser_Model_Preset");
 
         $renderHTML = "";
         $settingsTemplate = $template->create("3ps_cmfu_account_cmcontrol", $template->getParams());
         // Render username
         if ($visitor->hasPermission("3ps_cmfu", "canUseCustomUNM")) {
+            $permissions = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkupPermissionForUser("username");
+            $presets = array();
+            if (!is_array($fullUserOptions["username"]["presets"])) {
+                $fullUserOptions["username"]["presets"] = array();
+            }
+            foreach ($presetModel->getPresetsByGroup("username") as $presetId => $preset) {
+                $enable_for = unserialize($preset["enable_for"]);
+                if ($enable_for) {
+                    $presets[$presetId] = array(
+                        "label" => $preset["title"],
+                        "value" => $presetId,
+                        "selected" => in_array($presetId, $fullUserOptions["username"]["presets"])
+                    );
+                }
+            }
+            $presetsTemplate = $template->create("3ps_cmfu_presets_select", $template->getParams());
+            $presetsTemplate->setParams(array(
+                "title" => new XenForo_Phrase("user_name"),
+                "titleCode" => "username",
+                "presets" => $presets,
+                "permissions" => $permissions
+            ));
+            $presetHTML = $presetsTemplate->render();
             $settingsTemplate->setParams(array_merge(array(
                 "title" => new XenForo_Phrase("user_name"),
                 "titleCode" => "username",
-                "permissions" => ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkupPermissionForUser("username"),
+                "permissions" => $permissions,
                 "userOptions" => $fullUserOptions["username"],
-                "currentMarkupRender" => XenForo_Template_Helper_Core::callHelper("usernamehtml", array($visitor->toArray(), "", true))
+                "currentMarkupRender" => XenForo_Template_Helper_Core::callHelper("usernamehtml", array($visitor->toArray(), "", true)),
+                "presetHTML" => $presetHTML
             ), ThreePointStudio_CustomMarkupForUser_Helpers::getBaseViewParams()));
             $renderHTML .= $settingsTemplate->render();
         }
@@ -31,12 +57,33 @@ class ThreePointStudio_CustomMarkupForUser_Listener_Template {
             $user["custom_title"] = "(No Title Set)";
         }
         if ($visitor->hasPermission("3ps_cmfu", "canUseCustomUTM")) {
+            $permissions = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkupPermissionForUser("usertitle");
+            $presets = array();
+            if (!is_array($fullUserOptions["usertitle"]["presets"])) {
+                $fullUserOptions["usertitle"]["presets"] = array();
+            }
+            foreach ($presetModel->getPresetsByGroup("usertitle") as $presetId => $preset) {
+                $presets[$presetId] = array(
+                    "label" => $preset["title"],
+                    "value" => $presetId,
+                    "selected" => in_array($presetId, $fullUserOptions["usertitle"]["presets"])
+                );
+            }
+            $presetsTemplate = $template->create("3ps_cmfu_presets_select", $template->getParams());
+            $presetsTemplate->setParams(array(
+                "title" => new XenForo_Phrase("3ps_cmfu_user_title"),
+                "titleCode" => "usertitle",
+                "presets" => $presets,
+                "permissions" => $permissions
+            ));
+            $presetHTML = $presetsTemplate->render();
             $settingsTemplate->setParams(array_merge(array(
                 "title" => new XenForo_Phrase("3ps_cmfu_user_title"),
                 "titleCode" => "usertitle",
-                "permissions" => ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkupPermissionForUser("usertitle"),
+                "permissions" => $permissions,
                 "userOptions" => $fullUserOptions["usertitle"],
-                "currentMarkupRender" => XenForo_Template_Helper_Core::callHelper("usertitle", array($visitor->toArray()))
+                "currentMarkupRender" => XenForo_Template_Helper_Core::callHelper("usertitle", array($visitor->toArray())),
+                "presetHTML" => $presetHTML
             ), ThreePointStudio_CustomMarkupForUser_Helpers::getBaseViewParams()));
             $renderHTML .= $settingsTemplate->render();
         }

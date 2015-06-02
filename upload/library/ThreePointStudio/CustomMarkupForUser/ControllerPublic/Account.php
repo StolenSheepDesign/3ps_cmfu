@@ -9,7 +9,13 @@ class ThreePointStudio_CustomMarkupForUser_ControllerPublic_Account extends XFCP
 
     public function actionPreferencesSave() {
         $response = parent::actionPreferencesSave();
+        /* @var $userModel XenForo_Model_User */
+        $userModel = $this->getModelFromCache("XenForo_Model_User");
+        $user = $userModel->getUserById(XenForo_Visitor::getUserId());
+        $user["user_groups"] = array_merge(array((int) $user["user_group_id"]), explode(",", $user["secondary_group_ids"]));
         $options = $this->_input->filterSingle("3ps_cmfu_options", XenForo_Input::ARRAY_SIMPLE);
+        /* @var $presetsModel ThreePointStudio_CustomMarkupForUser_Model_Preset */
+        $presetsModel = $this->getModelFromCache("ThreePointStudio_CustomMarkupForUser_Model_Preset");
         $userPermissions = array(
             "username" => ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkupPermissionForUser("username"),
             "usertitle" => ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkupPermissionForUser("usertitle")
@@ -26,29 +32,49 @@ class ThreePointStudio_CustomMarkupForUser_ControllerPublic_Account extends XFCP
                     unset($options[$category][$itemName]); // Ignore any placeholders
                     continue;
                 }
-                $options[$category][$itemName] = XenForo_Input::rawFilter($itemValue, ThreePointStudio_CustomMarkupForUser_Constants::$availableMarkups[$itemName]["type"]);
+                if ($itemName == "presets") {
+                    $options[$category][$itemName] = XenForo_Input::rawFilter($itemValue, XenForo_Input::ARRAY_SIMPLE);
+                } else {
+                    $options[$category][$itemName] = XenForo_Input::rawFilter($itemValue, ThreePointStudio_CustomMarkupForUser_Constants::$availableMarkups[$itemName]["type"]);
+                }
             }
         }
 
         foreach ($options as $category => $catArray) {
             foreach ($catArray as $itemName => $itemValue) {
-                $itemArray = ThreePointStudio_CustomMarkupForUser_Constants::$availableMarkups[$itemName];
-                // Can we do this?
-                if (!$userPermissions[$category][$itemName]) {
-                    unset($options[$category][$itemName]); // Validation failed
-                    continue;
-                }
-                // Yes we can! Check if we have dependencies
-                if (isset($itemArray["requires"])) {
-                    foreach ($itemArray["requires"] as $requirement) {
-                        if ($catArray[$requirement[0]] !== $requirement[1]) {
-                            unset($options[$category][$itemName]); // Dependency not match, skipping
+                if ($itemName == "presets") {
+                    if (!is_array($itemValue)) {
+                        $options[$category]["presets"] = array();
+                    }
+                    foreach ($itemValue as $index => $presetId) {
+                        // Can we do this?
+                        $thePreset = $presetsModel->getPresetById($presetId);
+                        $user_groups = unserialize($thePreset["user_groups"]);
+                        $intersection = array_intersect($user_groups, $user["user_groups"]);
+                        if (empty($intersection)) {
+                            unset($options[$category]["presets"][$index]); // Validation failed
                             continue;
                         }
                     }
-                }
-                if (!call_user_func($itemArray["verify"]["func"], $itemValue)) {
-                    return $this->responseError(new XenForo_Phrase($itemArray["verify"]["error"]));  // Validation failed, ragequit
+                } else {
+                    $itemArray = ThreePointStudio_CustomMarkupForUser_Constants::$availableMarkups[$itemName];
+                    // Can we do this?
+                    if (!$userPermissions[$category][$itemName]) {
+                        unset($options[$category][$itemName]); // Validation failed
+                        continue;
+                    }
+                    // Yes we can! Check if we have dependencies
+                    if (isset($itemArray["requires"])) {
+                        foreach ($itemArray["requires"] as $requirement) {
+                            if ($catArray[$requirement[0]] !== $requirement[1]) {
+                                unset($options[$category][$itemName]); // Dependency not match, skipping
+                                continue;
+                            }
+                        }
+                    }
+                    if (!call_user_func($itemArray["verify"]["func"], $itemValue)) {
+                        return $this->responseError(new XenForo_Phrase($itemArray["verify"]["error"]));  // Validation failed, ragequit
+                    }
                 }
             }
         }

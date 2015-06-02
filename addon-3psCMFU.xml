@@ -861,6 +861,9 @@ Please support me by always keeping this box checked. This notice will not displ
   </route_prefixes>
   <style_properties/>
   <templates>
+    <template title="3ps_cmfu.css" version_id="5" version_string="1.1.0"><![CDATA[.xenForm .cmfuPresetsSelect input[type='checkbox'] {
+    margin-right: 5px;
+}]]></template>
     <template title="3ps_cmfu.js" version_id="5" version_string="1.1.0"><![CDATA[<script type="text/javascript">
 $(function () {
     var currentMarkupInstance = $('#currentMarkup_{$titleCode}');
@@ -991,7 +994,7 @@ $(function () {
     }
 });
 </script>]]></template>
-    <template title="3ps_cmfu_account_cmcontrol" version_id="3" version_string="1.0.0"><![CDATA[<xen:require css="3ps_cmfu_colorpicker.css" />
+    <template title="3ps_cmfu_account_cmcontrol" version_id="5" version_string="1.1.0"><![CDATA[<xen:require css="3ps_cmfu_colorpicker.css" />
 <xen:require css="3ps_cmfu.css" />
 <xen:require js="js/3ps/cmfu/colorpicker.js" />
 
@@ -1153,6 +1156,8 @@ $(function () {
         </dd>
     </dl>
 </xen:if>
+
+{xen:raw $presetHTML}
 <xen:include template="3ps_cmfu.js" />]]></template>
     <template title="3ps_cmfu_colorpicker.css" version_id="3" version_string="1.0.0"><![CDATA[.colorpicker {
 	width: 356px;
@@ -1383,6 +1388,20 @@ $(function () {
 	position: relative;
 	height: 36px;
 }]]></template>
+    <template title="3ps_cmfu_presets_select" version_id="5" version_string="1.1.0"><![CDATA[<xen:require css="3ps_cmfu.css" />
+
+<xen:if is="{$presets} and {$permissions.presets}">
+<dl class="ctrlUnit checkboxColumns">
+    <dt>{xen:phrase 3ps_cmfu_use_these_x_presets, 'title={$title}'}</dt>
+    <dd id="presets_select_{$titleCode}" class="cmfuPresetsSelect">
+		<ul>
+    	<xen:foreach loop="$presets" key="$presetID" value="$preset">
+			<li><label><input type="checkbox" name="3ps_cmfu_options[{$titleCode}][presets][]" value="{$presetID}" id="ctrl_3ps_cmfu_presets_{$titleCode}_{$presetID}" {xen:checked $preset.selected}>{$preset.label}</label></li>    	
+    	</xen:foreach>
+		</ul>
+    </dd>
+</dl>
+</xen:if>]]></template>
   </templates>
   <public_template_modifications>
     <modification template="navigation_visitor_tab" modification_key="3ps_cmfu_profile_username_link" description="Apply custom styling to username (with link to profile)" execution_order="10" enabled="1" action="str_replace">
