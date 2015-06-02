@@ -21,7 +21,8 @@ class ThreePointStudio_CustomMarkupForUser_Model_Preset extends XenForo_Model {
      * @return array
      */
     public function getSortedPresetsByIds(array $ids) {
-        return $this->sortPresetsByStylingPriority($this->getPresetsByIds($ids));
+        $presets = $this->getPresetsByIds($ids);
+        return $this->sortPresetsByStylingPriority($presets);
     }
 
     public function getAllPresets() {
@@ -66,7 +67,7 @@ class ThreePointStudio_CustomMarkupForUser_Model_Preset extends XenForo_Model {
      */
     protected function sortPresetsByStylingPriority(array &$presets) {
         usort($presets, function ($a, $b) {
-            return ($a["display_style_priority"] < $b["display_style_priority"] ? -1 : 1);
+            return ($a["display_style_priority"] > $b["display_style_priority"] ? -1 : 1);
         });
         return $presets;
     }

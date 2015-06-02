@@ -35,9 +35,10 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
         if ($usernameHtml === '') {
             $usernameHtml = htmlspecialchars($user['username']);
         }
-        $stylingOrder = XenForo_Application::getOptions()->get("3ps_cmfu_markupStylingOrder");
+
+        $stylingOrder = array_map('intval', XenForo_Application::getOptions()->get("3ps_cmfu_markupStylingOrder"));
         // sanity checks
-        if ($stylingOrder["preset"] == 0 && $stylingOrder["user"] == "0") {
+        if ($stylingOrder["preset"] == 0 && $stylingOrder["user"] == 0) {
             return $usernameHtml;
         }
 
@@ -53,14 +54,6 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
             $user["3ps_cmfu_render_cache_username"] = XenForo_Model::create("XenForo_Model_DataRegistry")->get("3ps_cmfu_render_cache_" . $user["user_id"] . "_username");
         }
 
-        $extraClasses = array();
-        if (isset($user['display_style_group_id']) && isset(XenForo_Template_Helper_Core::$_displayStyles[$user['display_style_group_id']])) {
-            $style = XenForo_Template_Helper_Core::$_displayStyles[$user['display_style_group_id']];
-            if ($style['username_css'] && $stylingOrder["default"] > 0) {
-                $extraClasses[] = 'style' . $user['display_style_group_id'];
-            }
-        }
-
         $options = unserialize($user["3ps_cmfu_options"]);
         if (!$options) {
             $options = ThreePointStudio_CustomMarkupForUser_Constants::$defaultOptionsArray;
@@ -73,55 +66,76 @@ class ThreePointStudio_CustomMarkupForUser_TemplateHelpers_Base extends XenForo_
 
         if (empty($user["user_id"])) {
             $html = "{inner}";
-        } elseif (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
-            $renderCache = $dr->get("3ps_cmfu_render_cache_" . $user["user_id"] . "_username");
-            if (!empty($renderCache) && !empty($renderCache["username"])) {
-                $html = $renderCache["username"];
-                $useCache = true;
-            } else {
-                $storeResultsInCache = true;
-            }
-        }
-        $presetsModel = self::getModelFromCache("ThreePointStudio_CustomMarkupForUser_Model_Preset");
-        $presetDefs = $presetsModel->getPresetsByIds($options["username"]["presets"]);
-
-        if (!$useCache) {
-            if (isset($options["username"]["presets"]) && !empty($options["username"]["presets"])) {
-                /* @var $presetsModel ThreePointStudio_CustomMarkupForUser_Model_Preset */
-                $presetsModel = self::getModelFromCache("ThreePointStudio_CustomMarkupForUser_Model_Preset");
-                $presetDefs = $presetsModel->getSortedPresetsByIds($options["username"]["presets"]);
-                // Squash prefix as appropriate
-                if ((int)$stylingOrder["preset"] > (int)$stylingOrder["user"]) {
-                    // Preset wins
-                    foreach ($presetDefs as $preset) {
-                        $config = unserialize($preset["config"]);
-                        $options["username"] = array_merge_recursive($options["username"], $config["preset"]);
-                    }
+        } else {
+            if (XenForo_Application::getOptions()->get("3ps_cmfu_useCache")) {
+                $renderCache = $dr->get("3ps_cmfu_render_cache_" . $user["user_id"] . "_username");
+                if (!empty($renderCache)) {
+                    $useCache = true;
+                    $storeResultsInCache = false;
                 } else {
-                    // User wins
-                    // Squash all prefixes
-                    $finalPresetsDefs = array();
-                    foreach ($presetDefs as $preset) {
-                        $config = unserialize($preset["config"]);
-                        $finalPresetsDefs = array_merge_recursive($finalPresetsDefs, $config);
-                    }
-                    // Apply it onto options
-                    $options["username"] = array_merge_recursive($finalPresetsDefs["preset"], $options["username"]);
+                    $useCache = false;
+                    $storeResultsInCache = true;
                 }
+            } else {
+                $useCache = false;
+                $storeResultsInCache = false;
             }
-            $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "username");
-        }
-        if ($storeResultsInCache) {
-            $dr->set("3ps_cmfu_render_cache_" . $user["user_id"] . "_username", $html);
-        }
 
-        if ($stylingPref == 0) { // User Group markup first
-            if (!is_null($extraClasses)) {
-                $html = str_replace("{inner}", '<span class="' . implode(" ", $extraClasses) . '">{inner}</span>', $html);
+            if (!$useCache) {
+                if (isset($options["username"]["presets"]) && !empty($options["username"]["presets"])) {
+                    /* @var $presetsModel ThreePointStudio_CustomMarkupForUser_Model_Preset */
+                    $presetsModel = self::getModelFromCache("ThreePointStudio_CustomMarkupForUser_Model_Preset");
+                    $presetDefs = $presetsModel->getSortedPresetsByIds($options["username"]["presets"]);
+                    // Squash prefix as appropriate
+                    //var_dump($presetDefs);
+                    if ($stylingOrder["preset"] > $stylingOrder["user"]) {
+                        // Preset wins
+                        foreach ($presetDefs as $preset) {
+                            $config = unserialize($preset["config"]);
+                            $options["username"] = array_merge($options["username"], $config["preset"]);
+                        }
+                    } else {
+                        // User wins
+                        // Squash all prefixes
+                        $finalPresetsDefs = array();
+                        foreach ($presetDefs as $preset) {
+                            $config = unserialize($preset["config"]);
+                            $finalPresetsDefs = array_merge($finalPresetsDefs, $config["preset"]);
+                        }
+                        // Apply it onto options
+                        $options["username"] = array_merge($finalPresetsDefs, $options["username"]);
+                    }
+                    unset($options["username"]["presets"]);
+                }
+
+                $insertBefore = false;
+                $extraClasses = array();
+                if ($stylingOrder["default"] > 0 && isset($user['display_style_group_id']) && isset(XenForo_Template_Helper_Core::$_displayStyles[$user['display_style_group_id']])) {
+                    $style = XenForo_Template_Helper_Core::$_displayStyles[$user['display_style_group_id']];
+                    if ($style['username_css']) {
+                        $extraClasses[] = 'style' . $user['display_style_group_id'];
+                    }
+                }
+
+                if ($stylingOrder["default"] > 0) {
+                    if ($stylingOrder["preset"] > $stylingOrder["user"]) {
+                        if ($stylingOrder["default"] > $stylingOrder["preset"]) {
+                            $insertBefore = true;
+                        }
+                    } else {
+                        if ($stylingOrder["default"] > $stylingOrder["user"]) {
+                            $insertBefore = true;
+                        }
+                    }
+                }
+                //die(var_dump($options));
+                $html = ThreePointStudio_CustomMarkupForUser_Helpers::assembleCustomMarkup($options, "username", $extraClasses, $insertBefore);
+            } else {
+                $html = $renderCache;
             }
-        } elseif ($stylingPref == 1) { // Custom markup first
-            if (!is_null($extraClasses)) {
-                $html = '<span class="' . implode(" ", $extraClasses) . '">' . $html . '</span>';
+
+            if ($storeResultsInCache) {
+                $dr->set("3ps_cmfu_render_cache_" . $user["user_id"] . "_username", $html);
             }
         }
         return str_replace("{inner}", $usernameHtml, $html);
