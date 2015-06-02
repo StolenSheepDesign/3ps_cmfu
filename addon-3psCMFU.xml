@@ -688,7 +688,7 @@ $(function () {
       <relation group_id="3ps_cmfu" display_order="4"/>
     </option>
     <option option_id="3ps_cmfu_markupStylingOrder" edit_format="template" data_type="array" can_backup="1">
-      <default_value>a:3:{i:0;s:7:"default";i:1;s:4:"user";i:3;s:7:"presets";i:2;}</default_value>
+      <default_value>a:3:{s:7:"default";s:1:"1";s:4:"user";s:1:"3";s:7:"presets";s:1:"2";}</default_value>
       <edit_format_params>option_template_3ps_cmfu_markupStylingOrder</edit_format_params>
       <sub_options>default
 user
